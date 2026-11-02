@@ -1,0 +1,36 @@
+name: Release
+on:
+  push:
+    tags: ["v*"]
+# Secrets (set in the repository settings, never committed):
+#   DEVELOPER_ID_CERT_P12     base64 Developer ID Application certificate
+#   DEVELOPER_ID_CERT_PASS    its password
+#   DEVELOPER_ID              "Developer ID Application: Name (TEAMID)"
+#   NOTARY_APPLE_ID, NOTARY_TEAM_ID, NOTARY_PASSWORD  (app-specific password)
+jobs:
+  release:
+    runs-on: macos-26
+    steps:
+      - uses: actions/checkout@v4
+      - run: brew install xcodegen
+      - name: Import signing certificate
+        env:
+          P12: ${{ secrets.DEVELOPER_ID_CERT_P12 }}
+          PASS: ${{ secrets.DEVELOPER_ID_CERT_PASS }}
+        run: |
+          echo "$P12" | base64 --decode > cert.p12
+          security create-keychain -p ci build.keychain
+          security default-keychain -s build.keychain
+          security unlock-keychain -p ci build.keychain
+          security import cert.p12 -k build.keychain -P "$PASS" -T /usr/bin/codesign
+          security set-key-partition-list -S apple-tool:,apple: -s -k ci build.keychain
+      - name: Store notary credentials
+        run: xcrun notarytool store-credentials brewlight --apple-id "${{ secrets.NOTARY_APPLE_ID }}" --team-id "${{ secrets.NOTARY_TEAM_ID }}" --password "${{ secrets.NOTARY_PASSWORD }}"
+      - name: Release
+        env:
+          DEVELOPER_ID: ${{ secrets.DEVELOPER_ID }}
+          NOTARY_PROFILE: brewlight
+        run: scripts/release.sh
+      - uses: softprops/action-gh-release@v2
+        with:
+          files: dist/*.dmg

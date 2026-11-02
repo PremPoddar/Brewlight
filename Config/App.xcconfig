@@ -1,0 +1,8 @@
+// Single place for the app's identity. Change these before the first release.
+APP_DISPLAY_NAME = Brewlight
+APP_BUNDLE_ID = com.example.brewlight
+APP_VERSION = 0.1.0
+APP_BUILD = 1
+APP_CASK_TOKEN = brewlight
+APP_REPO_URL = https:/$()/github.com/example/brewlight
+MACOSX_DEPLOYMENT_TARGET = 26.0
