@@ -7,6 +7,7 @@
   <img alt="macOS 26 Tahoe or later" src="https://img.shields.io/badge/macOS-26%2B-FFF4E2?labelColor=1A0F0A&style=for-the-badge&logo=apple&logoColor=FFF4E2">
   <img alt="Swift 6" src="https://img.shields.io/badge/Swift-6-F2557A?labelColor=1A0F0A&style=for-the-badge&logo=swift&logoColor=F2557A">
   <img alt="Six languages" src="https://img.shields.io/badge/languages-6-2EC4A6?labelColor=1A0F0A&style=for-the-badge">
+  <a href="LICENSE"><img alt="Apache 2.0 license" src="https://img.shields.io/badge/license-Apache_2.0-FFF4E2?labelColor=1A0F0A&style=for-the-badge"></a>
   <a href="https://github.com/PremPoddar/Brewlight/stargazers"><img alt="GitHub stars" src="https://img.shields.io/github/stars/PremPoddar/Brewlight?color=F8AC3D&labelColor=1A0F0A&style=for-the-badge&logo=github&logoColor=FFF4E2"></a>
 </p>
 
@@ -218,6 +219,10 @@ xcodebuild test -scheme Brewlight -configuration Release -destination 'platform=
 Brewlight is an independent app, not affiliated with the Homebrew project or Apple. Spotlight is
 a trademark of Apple Inc. Homebrew is run by volunteers — please consider
 [donating](https://github.com/Homebrew/brew#donations).
+
+## License
+
+[Apache 2.0](LICENSE).
 
 <br>
 
