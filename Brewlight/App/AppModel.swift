@@ -175,7 +175,7 @@ final class AppModel {
 
     private var watcher: FSEventsWatcher?
     private var rescanTask: Task<Void, Never>?
-    private let log = Logger(subsystem: "com.example.brewlight", category: "model")
+    private let log = Logger(subsystem: "com.prempoddar.brewlight", category: "model")
 
     init() {
         userData = UserDataStore(inMemory: AppInfo.isDemo)

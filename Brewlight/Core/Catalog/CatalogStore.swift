@@ -7,7 +7,7 @@ import os
 /// 3. formulae.brew.sh (ETag-cached) when there is no local cache.
 actor CatalogStore {
     private let snapshots: SnapshotStore
-    private static let log = Logger(subsystem: "com.example.brewlight", category: "catalog")
+    private static let log = Logger(subsystem: "com.prempoddar.brewlight", category: "catalog")
 
     init(directory: URL = Paths.appSupport) {
         snapshots = SnapshotStore(directory: directory)

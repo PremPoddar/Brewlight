@@ -44,9 +44,8 @@ brew install --cask brewlight
 
 **Direct download**
 
-Get `Brewlight-<version>.dmg` from
-[Releases](https://github.com/PremPoddar/Brewlight/releases/latest) and drag Brewlight to
-Applications.
+Download [`Brewlight.dmg`](https://github.com/PremPoddar/Brewlight/releases/latest/download/Brewlight.dmg)
+and drag Brewlight to Applications.
 
 </td>
 </tr>

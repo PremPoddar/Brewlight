@@ -51,7 +51,7 @@ actor BrewRunner: BrewRunning {
     private let env: BrewEnvironment
     private let extraEnvironment: @Sendable () -> [String: String]
     private var running: [UUID: (args: [String], process: Process)] = [:]
-    private static let log = Logger(subsystem: "com.example.brewlight", category: "runner")
+    private static let log = Logger(subsystem: "com.prempoddar.brewlight", category: "runner")
 
     init(env: BrewEnvironment, extraEnvironment: @escaping @Sendable () -> [String: String] = { [:] }) {
         self.env = env

@@ -4,7 +4,7 @@ import os
 /// Lightweight timing: `os_signpost` intervals for Instruments plus recorded durations
 /// for the in-app Performance HUD (Debug → Show Performance HUD).
 enum Perf {
-    static let signposter = OSSignposter(subsystem: "com.example.brewlight", category: .pointsOfInterest)
+    static let signposter = OSSignposter(subsystem: "com.prempoddar.brewlight", category: .pointsOfInterest)
     static let processStart = Date()
 
     struct Token: Sendable {

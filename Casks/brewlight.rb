@@ -3,10 +3,10 @@ cask "brewlight" do
   version "0.1.0"
   sha256 "REPLACE_WITH_SHA256"
 
-  url "https://github.com/example/brewlight/releases/download/v#{version}/Brewlight-#{version}.dmg"
+  url "https://github.com/PremPoddar/Brewlight/releases/download/v#{version}/Brewlight.dmg"
   name "Brewlight"
   desc "Spotlight-style manager for Homebrew packages"
-  homepage "https://github.com/example/brewlight"
+  homepage "https://github.com/PremPoddar/Brewlight"
 
   livecheck do
     url :url
@@ -21,8 +21,8 @@ cask "brewlight" do
 
   zap trash: [
     "~/Library/Application Support/Brewlight",
-    "~/Library/Caches/com.example.brewlight",
+    "~/Library/Caches/com.prempoddar.brewlight",
     "~/Library/Logs/Brewlight",
-    "~/Library/Preferences/com.example.brewlight.plist",
+    "~/Library/Preferences/com.prempoddar.brewlight.plist",
   ]
 end

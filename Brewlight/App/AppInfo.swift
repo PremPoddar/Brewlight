@@ -15,14 +15,14 @@ enum AppInfo {
         localized: "Brewlight is an independent app, not affiliated with the Homebrew project or Apple. Spotlight is a trademark of Apple Inc.",
         comment: "Trademark notice")
 
-    static var bundleID: String { Bundle.main.bundleIdentifier ?? "com.example.brewlight" }
+    static var bundleID: String { Bundle.main.bundleIdentifier ?? "com.prempoddar.brewlight" }
     static var version: String { info("CFBundleShortVersionString") ?? "0.0" }
     static var build: String { info("CFBundleVersion") ?? "0" }
     static var caskToken: String { info("BLCaskToken") ?? "brewlight" }
     static var copyright: String { info("NSHumanReadableCopyright") ?? "" }
 
     static var repositoryURL: URL {
-        URL(string: info("BLRepositoryURL") ?? "https://github.com/example/brewlight")!
+        URL(string: info("BLRepositoryURL") ?? "https://github.com/PremPoddar/Brewlight")!
     }
     static var issuesURL: URL { repositoryURL.appending(path: "issues/new") }
     static var releasesURL: URL { repositoryURL.appending(path: "releases") }
