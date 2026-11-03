@@ -7,7 +7,8 @@
 <meta name="description" content="Brewlight is a fast, native macOS app for Homebrew. Spotlight, but for brew.">
 <meta property="og:title" content="Brewlight — Spotlight, but for brew">
 <meta property="og:description" content="Search 16,000 formulae and casks as you type. Install, upgrade and fully remove them from one fast Mac app.">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='15' fill='%231A0F0A'/%3E%3Cpath d='M18 16h28l-4 34a4 4 0 0 1-4 4H26a4 4 0 0 1-4-4z' fill='%23F8AC3D'/%3E%3Cpath d='M17 14h30v7H17z' fill='%23FFF4E2' rx='3'/%3E%3C/svg%3E">
+<link rel="icon" type="image/png" href="assets/favicon.png">
+<link rel="apple-touch-icon" href="assets/icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@700&family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,300..800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
@@ -46,7 +47,7 @@ a { color: inherit; }
 /* Nav */
 nav { display: flex; align-items: center; justify-content: space-between; padding-top: 28px; padding-bottom: 28px; }
 .brand { display: flex; align-items: center; gap: 12px; font-weight: 750; font-size: 22px; text-decoration: none; letter-spacing: -0.01em; }
-.brand svg { width: 34px; height: 34px; }
+.brand img { width: 36px; height: 36px; display: block; filter: drop-shadow(0 2px 6px rgba(0,0,0,.35)); }
 .nav-links { display: flex; gap: 28px; font-size: 16px; }
 .nav-links a { text-decoration: none; color: var(--muted); }
 .nav-links a:hover { color: var(--foam); }
@@ -362,7 +363,7 @@ footer p { margin: 0; max-width: 60ch; }
 <header class="wrap">
   <nav aria-label="Main">
     <a class="brand" href="#">
-      <svg viewBox="0 0 64 64" aria-hidden="true"><rect width="64" height="64" rx="15" fill="#2C1A10"/><path d="M18 18h28l-4 32a4 4 0 0 1-4 4H26a4 4 0 0 1-4-4z" fill="#F8AC3D"/><path d="M19 26h26l-.6 5H19.6z" fill="#F2557A"/><path d="M20.3 36h23.4l-.6 5H20.9z" fill="#2EC4A6"/><rect x="15" y="12" width="34" height="9" rx="4.5" fill="#FFF4E2"/></svg>
+      <img src="assets/icon.png" alt="" width="36" height="36">
       Brewlight
     </a>
     <div class="nav-links">
@@ -561,7 +562,7 @@ footer p { margin: 0; max-width: 60ch; }
 
 <footer class="wrap">
   <p>Brewlight is independent and not affiliated with the Homebrew project or Apple. Spotlight is a trademark of Apple Inc.</p>
-  <span><a href="https://github.com/prempoddar/Brewlight">Source on GitHub</a> · <a href="https://github.com/prempoddar/Brewlight/blob/main/LICENSE">Apache 2.0 license</a></span>
+  <span><a href="privacy.html">Privacy</a> · <a href="https://github.com/prempoddar/Brewlight">Source on GitHub</a> · <a href="https://github.com/prempoddar/Brewlight/blob/main/LICENSE">Apache 2.0 license</a></span>
 </footer>
 
 <script>
