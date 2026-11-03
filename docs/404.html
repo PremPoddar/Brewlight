@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Page not found · Brewlight</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='15' fill='%231A0F0A'/%3E%3Cpath d='M18 16h28l-4 34a4 4 0 0 1-4 4H26a4 4 0 0 1-4-4z' fill='%23F8AC3D'/%3E%3Cpath d='M17 14h30v7H17z' fill='%23FFF4E2' rx='3'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@700&family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,300..800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --stout: #1A0F0A;
+  --stout-2: #24150D;
+  --line: #4A3022;
+  --foam: #FFF4E2;
+  --muted: #C7B19E;
+  --amber: #F8AC3D;
+  --cherry: #F2557A;
+  --hop: #2EC4A6;
+  --ink: #2A1903;
+  --display: "Bricolage Grotesque", ui-sans-serif, system-ui, sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, Menlo, monospace;
+  --gutter: clamp(16px, 4vw, 56px);
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0; min-height: 100vh; min-height: 100dvh;
+  background: var(--stout); color: var(--foam);
+  font-family: var(--display); font-size: 18px; line-height: 1.55;
+  display: flex; flex-direction: column; overflow-x: hidden;
+}
+a { color: inherit; }
+:focus-visible { outline: 3px solid var(--amber); outline-offset: 3px; border-radius: 6px; }
+.wrap { width: 100%; max-width: 1240px; margin: 0 auto; padding: 0 var(--gutter); }
+
+nav { display: flex; align-items: center; justify-content: space-between; padding-top: 28px; padding-bottom: 28px; }
+.brand { display: flex; align-items: center; gap: 12px; font-weight: 750; font-size: 22px; text-decoration: none; letter-spacing: -0.01em; }
+.brand svg { width: 34px; height: 34px; }
+
+main {
+  flex: 1; display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr);
+  gap: clamp(28px, 5vw, 80px); align-items: center;
+  padding-top: clamp(24px, 5vw, 64px); padding-bottom: clamp(48px, 7vw, 96px);
+}
+.code {
+  margin: 0 0 6px; font-weight: 800; font-size: clamp(18px, 2vw, 22px); color: var(--muted);
+  font-variation-settings: "opsz" 22; letter-spacing: 0.01em;
+}
+h1 {
+  margin: 0; font-family: "Caveat", "Bradley Hand", cursive; font-weight: 700;
+  font-size: clamp(72px, 12vw, 176px); line-height: .86; transform: rotate(-2deg); transform-origin: left center;
+}
+h1 .u { position: relative; display: inline-block; }
+.scribble { position: absolute; left: -2%; bottom: -.1em; width: 104%; height: .26em; overflow: visible; pointer-events: none; }
+.scribble path { fill: none; stroke: var(--cherry); stroke-width: 3.4; stroke-linecap: round; }
+.lede { max-width: 36ch; margin: clamp(26px, 3.5vw, 40px) 0 0; font-size: clamp(20px, 2vw, 24px); line-height: 1.4; }
+
+.term {
+  margin-top: 28px; max-width: 560px; background: var(--stout-2); border: 1px solid var(--line);
+  border-radius: 18px; overflow: hidden;
+}
+.term-bar { display: flex; gap: 7px; padding: 12px 14px; border-bottom: 1px solid var(--line); }
+.term-bar i { width: 11px; height: 11px; border-radius: 50%; background: #3A2418; }
+.term pre {
+  margin: 0; padding: 16px 18px; font: 400 14px/1.75 var(--mono); white-space: pre-wrap; word-break: break-word;
+}
+.term .pr { color: var(--hop); }
+.term .err { color: #FF6B7A; }
+.term .dim { color: #8C735F; }
+.term .ok { color: #5DD39E; }
+
+.links { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 30px; }
+.btn {
+  display: inline-flex; align-items: center; gap: 8px; text-decoration: none; font-weight: 650;
+  border-radius: 999px; padding: 11px 20px; font-size: 16px;
+}
+.btn.primary { background: var(--amber); color: var(--ink); }
+.btn.primary:hover { background: #FFC060; }
+.btn.ghost { border: 1.5px solid var(--line); color: var(--foam); }
+.btn.ghost:hover { border-color: var(--muted); }
+
+.scene { display: flex; flex-direction: column; align-items: center; }
+.glass-btn { background: none; border: 0; padding: 0; cursor: pointer; width: 100%; max-width: 440px; }
+.glass-btn svg { width: 100%; height: auto; display: block; overflow: visible; }
+#cup { transform-origin: 230px 285px; transform: translate(-196px, -35px) rotate(90deg); transition: transform .7s cubic-bezier(.34, 1.3, .5, 1); }
+.upright #cup { transform: translate(0, 46px) rotate(0deg); }
+#spill { transition: opacity .4s ease, transform .5s ease; transform-origin: 270px 330px; }
+.upright #spill { opacity: 0; transform: scaleX(.3); }
+#fill { transition: transform 1s cubic-bezier(.3, .7, .2, 1) .5s; transform-origin: 0 284px; transform: scaleY(0); }
+.upright #fill { transform: scaleY(1); }
+#fillfoam { opacity: 0; transition: opacity .3s ease 1.3s; }
+.upright #fillfoam { opacity: 1; }
+.hint { margin-top: 14px; color: var(--muted); font-size: 15px; min-height: 1.5em; text-align: center; }
+
+footer { padding-bottom: 36px; font-size: 14px; color: var(--muted); }
+
+@media (max-width: 820px) {
+  main { grid-template-columns: 1fr; }
+  .scene { margin-top: -12px; }
+  .glass-btn { max-width: 280px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  #cup, #spill, #fill, #fillfoam { transition: none; }
+}
+</style>
+</head>
+<body>
+
+<header class="wrap">
+  <nav aria-label="Main">
+    <a class="brand" href="/Brewlight/">
+      <svg viewBox="0 0 64 64" aria-hidden="true"><rect width="64" height="64" rx="15" fill="#2C1A10"/><path d="M18 18h28l-4 32a4 4 0 0 1-4 4H26a4 4 0 0 1-4-4z" fill="#F8AC3D"/><path d="M19 26h26l-.6 5H19.6z" fill="#F2557A"/><path d="M20.3 36h23.4l-.6 5H20.9z" fill="#2EC4A6"/><rect x="15" y="12" width="34" height="9" rx="4.5" fill="#FFF4E2"/></svg>
+      Brewlight
+    </a>
+  </nav>
+</header>
+
+<main class="wrap">
+  <div>
+    <p class="code">404</p>
+    <h1><span class="u">Spilled.<svg class="scribble" viewBox="0 0 400 30" preserveAspectRatio="none" aria-hidden="true"><path d="M4 16 C 90 6, 200 8, 300 12 S 380 16, 396 10"/></svg></span></h1>
+    <p class="lede">There's nothing on tap at this address. The page may have moved, or the link has a typo.</p>
+
+    <div class="term" role="img" aria-label="Homebrew could not find this page">
+      <div class="term-bar" aria-hidden="true"><i></i><i></i><i></i></div>
+      <pre><span class="pr">$</span> brew install <span id="name">this-page</span>
+<span class="err">Error:</span> No available formula with the name "<span id="name2">this-page</span>".
+<span class="dim">==&gt; Searching for similarly named formulae...</span>
+<span class="ok">brewlight</span></pre>
+    </div>
+
+    <div class="links">
+      <a class="btn primary" href="/Brewlight/">Go to the Brewlight home page</a>
+      <a class="btn ghost" href="/Brewlight/#try">Try the palette</a>
+    </div>
+  </div>
+
+  <div class="scene">
+    <button class="glass-btn" id="glass" type="button" aria-label="Stand the glass back up">
+      <svg viewBox="0 0 440 360" aria-hidden="true">
+        <defs>
+          <clipPath id="cupclip"><path d="M150 40h160l-16 236a10 10 0 0 1-10 9H176a10 10 0 0 1-10-9z"/></clipPath>
+        </defs>
+        <ellipse cx="220" cy="332" rx="190" ry="10" fill="#120A06"/>
+        <g id="spill">
+          <path d="M262 300 C 282 312, 300 318, 330 320 C 370 322, 412 318, 426 326 C 434 334, 400 340, 340 341 C 300 342, 268 340, 250 334 Z" fill="#F8AC3D"/>
+          <path d="M290 326 C 320 324, 360 326, 396 326" stroke="#FFF4E2" stroke-opacity=".45" stroke-width="4" fill="none" stroke-linecap="round"/>
+          <circle cx="420" cy="306" r="6" fill="#F2557A"/>
+          <circle cx="398" cy="300" r="4" fill="#2EC4A6"/>
+          <circle cx="300" cy="298" r="3.5" fill="#F8AC3D"/>
+        </g>
+        <g id="cup">
+          <g clip-path="url(#cupclip)">
+            <rect x="140" y="30" width="180" height="270" fill="#2A1910"/>
+            <g id="fill">
+              <rect x="140" y="232" width="180" height="56" fill="#F8AC3D"/>
+              <rect x="140" y="190" width="180" height="44" fill="#F2557A"/>
+              <rect x="140" y="150" width="180" height="42" fill="#2EC4A6"/>
+            </g>
+            <path id="fillfoam" d="M140 154 Q160 136 180 148 T220 146 T260 148 T300 144 T320 150 V160 H140Z" fill="#FFF4E2"/>
+          </g>
+          <path d="M150 40h160l-16 236a10 10 0 0 1-10 9H176a10 10 0 0 1-10-9z" fill="none" stroke="#FFF4E2" stroke-opacity=".6" stroke-width="4"/>
+        </g>
+      </svg>
+    </button>
+    <p class="hint" id="hint" aria-live="polite">Click the glass to stand it back up.</p>
+  </div>
+</main>
+
+<footer class="wrap">Brewlight is independent and not affiliated with the Homebrew project or Apple.</footer>
+
+<script>
+(() => {
+  const seg = decodeURIComponent(location.pathname).split("/").filter(Boolean).pop() || "";
+  const name = seg.toLowerCase().replace(/\.html?$/, "").replace(/[^a-z0-9@._+-]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 40);
+  if (name && name !== "brewlight") {
+    document.getElementById("name").textContent = name;
+    document.getElementById("name2").textContent = name;
+  }
+  const glass = document.getElementById("glass");
+  const hint = document.getElementById("hint");
+  glass.addEventListener("click", () => {
+    const up = glass.classList.toggle("upright");
+    glass.setAttribute("aria-label", up ? "Tip the glass over again" : "Stand the glass back up");
+    hint.textContent = up ? "Good as new. Now let's get you somewhere real." : "Click the glass to stand it back up.";
+  });
+})();
+</script>
+</body>
+</html>
