@@ -36,7 +36,7 @@ native Mac app that opens instantly.
 **With Homebrew**
 
 ```bash
-brew install --cask brewlight
+brew install --cask prempoddar/tap/brewlight
 ```
 
 </td>
@@ -53,6 +53,9 @@ and drag Brewlight to Applications.
 
 Needs macOS 26 Tahoe or later. If [Homebrew](https://brew.sh) isn't installed yet, Brewlight
 walks you through installing it.
+
+Brewlight isn't notarized yet, so the first time you open it macOS blocks it. Go to
+**System Settings → Privacy & Security** and click **Open Anyway**.
 
 ## Press ⌘K
 

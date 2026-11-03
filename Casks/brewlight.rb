@@ -1,12 +1,12 @@
-# Template for the Homebrew cask. scripts/release.sh prints the version and sha256 lines.
+# Published in github.com/PremPoddar/homebrew-tap. scripts/release.sh prints the version and sha256 lines.
 cask "brewlight" do
   version "0.1.0"
-  sha256 "REPLACE_WITH_SHA256"
+  sha256 "bab55d46dfc787286aa1909fae754ab540aaf314059881c075cc26a49420729d"
 
   url "https://github.com/PremPoddar/Brewlight/releases/download/v#{version}/Brewlight.dmg"
   name "Brewlight"
   desc "Spotlight-style manager for Homebrew packages"
-  homepage "https://github.com/PremPoddar/Brewlight"
+  homepage "https://prempoddar.github.io/Brewlight/"
 
   livecheck do
     url :url
@@ -18,6 +18,11 @@ cask "brewlight" do
   depends_on macos: ">= :tahoe"
 
   app "Brewlight.app"
+
+  caveats <<~EOS
+    Brewlight is not notarized yet. The first time you open it, macOS blocks it:
+    go to System Settings > Privacy & Security and click Open Anyway.
+  EOS
 
   zap trash: [
     "~/Library/Application Support/Brewlight",
