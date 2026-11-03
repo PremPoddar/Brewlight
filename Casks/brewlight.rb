@@ -1,4 +1,3 @@
-# Published in github.com/PremPoddar/homebrew-tap. scripts/release.sh prints the version and sha256 lines.
 cask "brewlight" do
   version "0.1.0"
   sha256 "bab55d46dfc787286aa1909fae754ab540aaf314059881c075cc26a49420729d"
@@ -15,14 +14,9 @@ cask "brewlight" do
 
   # Cask installs update through `brew upgrade --cask brewlight`; the app detects this channel
   # and does not self-update, so auto_updates stays false.
-  depends_on macos: ">= :tahoe"
+  depends_on macos: :tahoe
 
   app "Brewlight.app"
-
-  caveats <<~EOS
-    Brewlight is not notarized yet. The first time you open it, macOS blocks it:
-    go to System Settings > Privacy & Security and click Open Anyway.
-  EOS
 
   zap trash: [
     "~/Library/Application Support/Brewlight",
@@ -30,4 +24,9 @@ cask "brewlight" do
     "~/Library/Logs/Brewlight",
     "~/Library/Preferences/com.prempoddar.brewlight.plist",
   ]
+
+  caveats <<~EOS
+    Brewlight is not notarized yet. The first time you open it, macOS blocks it:
+    go to System Settings > Privacy & Security and click Open Anyway.
+  EOS
 end
