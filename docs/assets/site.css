@@ -1,0 +1,44 @@
+/* Header and footer shared by every page. Pages define the colour tokens. */
+html { scroll-padding-top: 84px; }
+
+.by-strip {
+  display: flex; justify-content: center; align-items: center; gap: 18px; flex-wrap: wrap;
+  padding: 7px 16px; font-size: 13px; line-height: 1.4; color: var(--muted);
+  border-bottom: 1px solid var(--line); background: var(--stout);
+}
+.by-strip a { color: var(--foam); text-decoration: none; font-weight: 650; }
+.by-strip a:hover { text-decoration: underline; text-decoration-color: var(--amber); text-underline-offset: 3px; }
+
+.site-nav {
+  position: sticky; top: 0; z-index: 50;
+  background: rgba(26, 15, 10, .72); border-bottom: 1px solid var(--line);
+  -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px);
+}
+.site-nav .wrap { display: flex; align-items: center; justify-content: space-between; gap: 16px; height: 64px; }
+.brand {
+  display: flex; align-items: center; gap: 11px; color: var(--foam);
+  font-weight: 750; font-size: 20px; letter-spacing: -0.01em; text-decoration: none;
+}
+.brand img { width: 32px; height: 32px; display: block; }
+.nav-links { display: flex; align-items: center; gap: 26px; font-size: 15px; }
+.nav-links a { color: var(--muted); text-decoration: none; transition: color .2s; }
+.nav-links a:hover, .nav-links a[aria-current="page"] { color: var(--foam); }
+.nav-links .nav-cta {
+  background: var(--amber); color: var(--ink); font-weight: 650; padding: 8px 18px; border-radius: 999px;
+  box-shadow: 0 6px 20px -6px rgba(248, 172, 61, .55);
+}
+.nav-links .nav-cta:hover { background: #FFC060; color: var(--ink); }
+@media (max-width: 680px) {
+  .nav-links a:not(.nav-cta) { display: none; }
+}
+
+.site-foot { border-top: 1px solid var(--line); padding: 38px 0 34px; }
+.site-foot .row { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px 28px; }
+.site-foot .brand { font-size: 17px; }
+.site-foot .brand img { width: 26px; height: 26px; }
+.foot-note { color: var(--muted); font-size: 14px; }
+.site-foot .links { display: flex; flex-wrap: wrap; gap: 10px 22px; }
+.site-foot .links a { color: var(--muted); font-size: 15px; text-decoration: none; transition: color .2s; }
+.site-foot .links a:hover { color: var(--foam); }
+.site-foot .legal { margin: 24px 0 0; font-size: 13px; line-height: 1.5; color: #8C735F; }
+.site-foot .legal a { color: inherit; }
