@@ -1,14 +1,6 @@
 /* Header and footer shared by every page. Pages define the colour tokens. */
 html { scroll-padding-top: 84px; }
 
-.by-strip {
-  display: flex; justify-content: center; align-items: center; gap: 18px; flex-wrap: wrap;
-  padding: 7px 16px; font-size: 13px; line-height: 1.4; color: var(--muted);
-  border-bottom: 1px solid var(--line); background: var(--stout);
-}
-.by-strip a { color: var(--foam); text-decoration: none; font-weight: 650; }
-.by-strip a:hover { text-decoration: underline; text-decoration-color: var(--amber); text-underline-offset: 3px; }
-
 .site-nav {
   position: sticky; top: 0; z-index: 50;
   background: rgba(26, 15, 10, .72); border-bottom: 1px solid var(--line);
@@ -20,6 +12,10 @@ html { scroll-padding-top: 84px; }
   font-weight: 750; font-size: 20px; letter-spacing: -0.01em; text-decoration: none;
 }
 .brand img { width: 32px; height: 32px; display: block; }
+.brand-line { display: flex; align-items: center; gap: 10px; min-width: 0; }
+.by-sep { color: var(--muted); opacity: .55; }
+.by { color: var(--muted); text-decoration: none; font-weight: 500; font-size: 15px; white-space: nowrap; transition: color .2s; }
+.by:hover { color: var(--foam); }
 .nav-links { display: flex; align-items: center; gap: 26px; font-size: 15px; }
 .nav-links a { color: var(--muted); text-decoration: none; transition: color .2s; }
 .nav-links a:hover, .nav-links a[aria-current="page"] { color: var(--foam); }
@@ -30,6 +26,11 @@ html { scroll-padding-top: 84px; }
 .nav-links .nav-cta:hover { background: #FFC060; color: var(--ink); }
 @media (max-width: 680px) {
   .nav-links a:not(.nav-cta) { display: none; }
+}
+@media (max-width: 520px) {
+  .brand-line { flex-direction: column; align-items: flex-start; gap: 0; }
+  .by-sep { display: none; }
+  .by { font-size: 12px; line-height: 1.1; margin-left: 43px; margin-top: -3px; }
 }
 
 .site-foot { border-top: 1px solid var(--line); padding: 38px 0 34px; }
