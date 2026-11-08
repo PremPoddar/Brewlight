@@ -26,6 +26,19 @@ actor IconResolver {
         var pixelSize: Int
     }
 
+    init() {
+        // Startup purge: icons and miss markers older than a month simply re-fetch, so the
+        // cache doesn't collect every package ever browsed.
+        let cutoff = Date.now.addingTimeInterval(-30 * 86_400)
+        let fm = FileManager.default
+        if let files = try? fm.contentsOfDirectory(at: Paths.iconCache, includingPropertiesForKeys: nil) {
+            for f in files {
+                let modified = (try? fm.attributesOfItem(atPath: f.path))?[.modificationDate] as? Date
+                if (modified ?? .distantPast) < cutoff { try? fm.removeItem(at: f) }
+            }
+        }
+    }
+
     func clearCache() {
         memory.removeAllObjects()
         misses.removeAll()
