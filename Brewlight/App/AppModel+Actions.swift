@@ -91,9 +91,11 @@ extension AppModel {
 
     var upgradeAllCommands: [BrewCommand] { upgradeCommands(visibleOutdated.values.filter { !$0.pinned }.map(\.id)) }
 
-    func run(_ commands: [BrewCommand], showActivity show: Bool = true) {
-        for c in commands { operations.enqueue(c.title, c.args, packages: c.packages) }
+    @discardableResult
+    func run(_ commands: [BrewCommand], showActivity show: Bool = true) -> [BrewOperation] {
+        let ops = commands.map { operations.enqueue($0.title, $0.args, packages: $0.packages) }
         if show && !commands.isEmpty { showActivity = true }
+        return ops
     }
 
     // MARK: Install / uninstall / upgrade

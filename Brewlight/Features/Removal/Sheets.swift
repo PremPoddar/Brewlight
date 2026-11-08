@@ -286,13 +286,14 @@ struct RemoveCompletelySheet: View {
 
     private func perform(isCask: Bool) {
         let plan = removalPlan(isCask: isCask)
-        model.run([plan.command].compactMap { $0 })
-        if !plan.files.isEmpty {
-            // Wait for the uninstall to finish, then remove exactly the checked files.
+        let ops = model.run([plan.command].compactMap { $0 })
+        if !plan.files.isEmpty, let uninstall = ops.first {
+            // Delete the checked files only if the uninstall itself succeeded, and only wait
+            // for that one operation — nothing else the user queued afterwards.
             let toRemove = plan.files
             Task { @MainActor in
-                while model.operations.hasActive { try? await Task.sleep(for: .milliseconds(300)) }
-                model.remove(toRemove)
+                await uninstall.waitUntilFinished()
+                if uninstall.state == .succeeded { model.remove(toRemove) }
             }
         }
         model.toast(String(localized: "Tip: Maintenance → Remove unused dependencies cleans up what's left."))

@@ -42,6 +42,12 @@ final class BrewOperation: Identifiable {
     /// Ends output; returns a notice still being collected.
     func finishOutput() -> OperationNotice? { record(detector.flush()) }
 
+    /// Awaits completion (queued → running → succeeded/failed/cancelled), polled like the
+    /// app's other main-actor waiters; the caller may watch `state` for the outcome.
+    func waitUntilFinished() async {
+        while !state.isFinished { try? await Task.sleep(for: .milliseconds(100)) }
+    }
+
     func replaceLog(_ lines: [OutputLine]) {
         log = []
         for l in lines { append(l) }
