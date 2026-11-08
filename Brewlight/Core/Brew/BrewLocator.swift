@@ -57,7 +57,9 @@ enum BrewLocator {
 
     /// Derives every path from one `brew --prefix` style call batch.
     static func resolve(brew: URL) -> BrewEnvironment? {
-        let script = "\(brew.path) --prefix; \(brew.path) --cellar; \(brew.path) --caskroom; \(brew.path) --cache; \(brew.path) --repository; \(brew.path) --version"
+        // Quoted so a Homebrew on a path containing spaces (user override) still works.
+        let b = BrewCommand.quote(brew.path)
+        let script = "\(b) --prefix; \(b) --cellar; \(b) --caskroom; \(b) --cache; \(b) --repository; \(b) --version"
         guard let out = try? runSync("/bin/sh", ["-c", script], env: ["HOMEBREW_NO_AUTO_UPDATE": "1", "HOMEBREW_NO_ENV_HINTS": "1"]) else { return nil }
         let lines = out.split(separator: "\n").map(String.init)
         guard lines.count >= 6 else { return nil }
