@@ -73,6 +73,10 @@ struct SnapshotStore: Sendable {
                 result[id] = now
             }
         }
+        // Keep dates only for packages that still exist, so removed IDs don't pile up forever.
+        // An empty current list means the catalog failed to load — leave the map alone.
+        let current = Set(currentIDs)
+        if !current.isEmpty { result = result.filter { current.contains($0.key) } }
         return result
     }
 
