@@ -43,9 +43,9 @@ final class BackgroundChecker {
         let acOnly = UserDefaults.standard.object(forKey: "onlyOnACPower") as? Bool ?? true
         if acOnly && !Self.isOnACPower() { return }
         let before = Set(model.visibleOutdated.keys)
-        if let runner = model.runner {
-            _ = await runner.output(["update", "--quiet"])
-        }
+        // `brew update` also writes Homebrew's repository, so it must join the operation
+        // queue rather than run alongside whatever the user is doing.
+        await model.operations.enqueue(String(localized: "Update Homebrew"), ["update", "--quiet"]).waitUntilFinished()
         await model.refreshCatalog()
         await model.refreshOutdated(confirmWithBrew: true)
         let now = model.visibleOutdated.filter { !$0.value.pinned }
