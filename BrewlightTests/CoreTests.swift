@@ -676,4 +676,96 @@ final class BundleToken {}
         #expect(!fm.fileExists(atPath: cache.appending(path: "python--3.15.2").path))
         #expect(fm.fileExists(atPath: downloads.appending(path: "cc--python@3.14--3.14.10.bottle.tar.gz").path))
     }
+
+    /// A package's cached files might be real files (older Homebrew layouts), not symlinks.
+    @Test func listsRealCachedFilesNotJustSymlinks() throws {
+        let fm = FileManager.default
+        let cache = fm.temporaryDirectory.appending(path: "bl-cache-real-\(UUID())")
+        try fm.createDirectory(at: cache, withIntermediateDirectories: true)
+        defer { try? fm.removeItem(at: cache) }
+
+        try Data(count: 100).write(to: cache.appending(path: "fd--10.3.0.zip"))                 // real file
+        try fm.createSymbolicLink(atPath: cache.appending(path: "fd_bottle_manifest--10.3.0.json").path,
+                                  withDestinationPath: "fd--10.3.0.zip")                        // working link
+        try fm.createSymbolicLink(atPath: cache.appending(path: "fd--9.0.1.zip").path,
+                                  withDestinationPath: "gone-from-downloads")                   // broken link
+        try Data(count: 400).write(to: cache.appending(path: "ripgrep--14.1.1.zip"))            // another package
+
+        let p = Package(kind: .formula, token: "fd", fullName: "fd", displayName: "fd", desc: "", homepage: "", version: "10.3.0", tap: "homebrew/core")
+        let entries = PackageCache.entries(for: p, cache: cache)
+
+        #expect(entries.count == 3)
+        // diskSize reports allocated (block-rounded) bytes, so assert the relationships:
+        let real = entries.first { $0.file?.lastPathComponent == "fd--10.3.0.zip" }
+        #expect((real?.size ?? 0) > 0)                       // the real file's data is counted
+        let linked = entries.first { $0.link.lastPathComponent == "fd_bottle_manifest--10.3.0.json" }
+        #expect(linked?.file == real?.file && linked?.size == real?.size)
+
+        let broken = entries.first { $0.link.lastPathComponent == "fd--9.0.1.zip" }
+        #expect(broken?.file == nil && broken?.size == 0)
+    }
+
+    /// `remove` must not strike a real file (link == file there) a second time and report it failed.
+    @Test func removingDoesNotRevisitOneFileTwice() throws {
+        let fm = FileManager.default
+        let cache = fm.temporaryDirectory.appending(path: "bl-cache-rm-\(UUID())")
+        try fm.createDirectory(at: cache, withIntermediateDirectories: true)
+        defer { try? fm.removeItem(at: cache) }
+        try Data(count: 10).write(to: cache.appending(path: "fd--10.3.0.zip"))
+
+        let p = Package(kind: .formula, token: "fd", fullName: "fd", displayName: "fd", desc: "", homepage: "", version: "10.3.0", tap: "homebrew/core")
+        #expect(PackageCache.remove(PackageCache.entries(for: p, cache: cache)).isEmpty)
+        #expect((try? fm.contentsOfDirectory(atPath: cache.path).isEmpty) == true)
+    }
+}
+
+// MARK: Brew path detection
+
+/// Homebrew found via a path containing a space (Settings override) must still resolve.
+@Suite struct BrewPathDetectionTests {
+    @Test func resolveQuotesPathsContainingSpaces() throws {
+        let fm = FileManager.default
+        let dir = fm.temporaryDirectory.appending(path: "bl-brew space-\(UUID())")
+        let brew = dir.appending(path: "bin").appending(path: "brew")
+        try fm.createDirectory(at: brew.deletingLastPathComponent(), withIntermediateDirectories: true)
+        defer { try? fm.removeItem(at: dir) }
+
+        let script = """
+        #!/bin/sh
+        echo "\(dir.path)/prefix"
+        echo "/fake/cellar"
+        echo "/fake/caskroom"
+        echo "/fake/cache"
+        echo "/fake/repository"
+        echo "Homebrew 4.4.0"
+        """
+        try script.write(to: brew, atomically: true, encoding: .utf8)
+        try fm.setAttributes([.posixPermissions: 0o755], ofItemAtPath: brew.path)
+
+        let env = BrewLocator.resolve(brew: brew)
+        #expect(env?.brew == brew)
+        #expect(env?.prefix.path == dir.appending(path: "prefix").path)
+        #expect(env?.version == "4.4.0")
+    }
+}
+
+// MARK: First seen
+
+@Suite struct FirstSeenTests {
+    /// Packages that leave the catalog must not keep their first-seen date forever.
+    @Test func dropsRetiredPackageIDs() {
+        let now = Date(timeIntervalSince1970: 1_792_000_000)
+        let map = SnapshotStore.diff(previous: ["formula:old": .distantPast, "formula:stay": .distantPast],
+                                     currentIDs: ["formula:stay", "formula:new"], now: now, seedNew: [])
+        #expect(map["formula:old"] == nil)
+        #expect(map["formula:stay"] == .distantPast)
+        #expect(map["formula:new"] == now)
+    }
+
+    /// An empty catalog (e.g. a parse failure) must not wipe every record.
+    @Test func keepsEverythingWhenCatalogIsEmpty() {
+        let map = SnapshotStore.diff(previous: ["formula:stay": .distantPast],
+                                     currentIDs: [], now: .now, seedNew: [])
+        #expect(map["formula:stay"] == .distantPast)
+    }
 }
