@@ -142,7 +142,11 @@ private struct PrivacySettings: View {
             Button(String(localized: "Clear Icon Cache")) { Task { await IconResolver.shared.clearCache() } }
             Button(String(localized: "Clear All Caches")) {
                 Task { await IconResolver.shared.clearCache() }
-                try? FileManager.default.removeItem(at: Paths.caches)
+                // Contents only: stores keep paths into this folder, deleting the folder itself
+                // would make their next write fail silently until relaunch.
+                if let items = try? FileManager.default.contentsOfDirectory(at: Paths.caches, includingPropertiesForKeys: nil) {
+                    for item in items { try? FileManager.default.removeItem(at: item) }
+                }
             }
             Text(String(localized: "Brewlight sends nothing about you anywhere. Network requests go to formulae.brew.sh, GitHub, and package homepages (for icons) only."))
                 .font(.caption).foregroundStyle(.secondary)
