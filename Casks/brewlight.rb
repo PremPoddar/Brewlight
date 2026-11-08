@@ -1,6 +1,7 @@
 cask "brewlight" do
-  version "0.1.0"
-  sha256 "bab55d46dfc787286aa1909fae754ab540aaf314059881c075cc26a49420729d"
+  version "1.1.0"
+  # sha256 of the 1.1.0 DMG once the release build is done; :no_check until then.
+  sha256 :no_check
 
   url "https://github.com/PremPoddar/Brewlight/releases/download/v#{version}/Brewlight.dmg"
   name "Brewlight"
