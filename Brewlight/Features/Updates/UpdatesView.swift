@@ -298,7 +298,7 @@ struct DeprecatedRow: View {
                         .help(r.installCommand)
                 }
             }
-            RowActionButton(title: String(localized: "Uninstall…"), prominent: false) { model.pendingSheet = .uninstall(p.id) }
+            RowActionButton(title: String(localized: "Uninstall"), prominent: false) { model.pendingSheet = .uninstall(p.id) }
             Button { model.reveal(p.id) } label: { Image(systemName: "chevron.right") }
                 .buttonStyle(.plain).foregroundStyle(Theme.text3)
                 .accessibilityLabel(String(localized: "Show \(p.token)"))
@@ -333,7 +333,7 @@ struct BrokenRow: View {
                 Text(detail).font(.system(size: 12)).foregroundStyle(Theme.text2).lineLimit(2)
             }
             Spacer()
-            RowActionButton(title: String(localized: "Uninstall…"), danger: true) {
+            RowActionButton(title: String(localized: "Uninstall"), danger: true) {
                 model.pendingSheet = .uninstall(item.inst.id)
             }
         }

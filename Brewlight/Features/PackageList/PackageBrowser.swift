@@ -371,8 +371,8 @@ struct PackageContextMenu: View {
                 Button(String(localized: "Open")) { model.open(id) }
             }
             Button(String(localized: "Reinstall")) { model.reinstall(id) }
-            Button(String(localized: "Uninstall…")) { model.pendingSheet = .uninstall(id) }
-            Button(String(localized: "Remove Completely…")) { model.pendingSheet = .removeCompletely(id) }
+            Button(String(localized: "Uninstall"), role: .destructive) { model.pendingSheet = .uninstall(id) }
+            Button(String(localized: "Remove Completely"), role: .destructive) { model.pendingSheet = .removeCompletely(id) }
             if package.kind == .formula {
                 Button(inst?.isPinned == true ? String(localized: "Unpin") : String(localized: "Pin")) { model.pin(id, !(inst?.isPinned ?? false)) }
             }

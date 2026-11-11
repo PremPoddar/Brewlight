@@ -17,8 +17,8 @@ extension AppModel {
                 e.append(MenuEntry(String(localized: "Open")) { self.open(id) })
             }
             e.append(MenuEntry(String(localized: "Reinstall")) { self.reinstall(id) })
-            e.append(MenuEntry(String(localized: "Uninstall…")) { self.pendingSheet = .uninstall(id) })
-            e.append(MenuEntry(String(localized: "Remove Completely…")) { self.pendingSheet = .removeCompletely(id) })
+            e.append(MenuEntry(String(localized: "Uninstall"), isDestructive: true) { self.pendingSheet = .uninstall(id) })
+            e.append(MenuEntry(String(localized: "Remove Completely"), isDestructive: true) { self.pendingSheet = .removeCompletely(id) })
             if p.kind == .formula {
                 let pinned = inst?.isPinned ?? false
                 e.append(MenuEntry(pinned ? String(localized: "Unpin") : String(localized: "Pin")) { self.pin(id, !pinned) })

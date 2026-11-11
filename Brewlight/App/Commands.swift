@@ -39,7 +39,7 @@ struct BrewlightCommands: Commands {
             }
             .keyboardShortcut(.delete)
             .disabled(!(model.selectedPackageID.map(model.isInstalled) ?? false))
-            Button(String(localized: "Remove Completely…")) {
+            Button(String(localized: "Remove Completely"), role: .destructive) {
                 if let id = model.selectedPackageID { model.pendingSheet = .removeCompletely(id) }
             }
             .keyboardShortcut(.delete, modifiers: [.command, .option])

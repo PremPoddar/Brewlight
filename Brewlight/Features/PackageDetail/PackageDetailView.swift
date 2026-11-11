@@ -116,7 +116,7 @@ struct PackageDetailView: View {
             Button(String(localized: "Open")) { model.open(p.id) }
                 .buttonStyle(PrimaryPillButtonStyle())
         } else {
-            Button(String(localized: "Uninstall…")) { model.pendingSheet = .uninstall(p.id) }
+            Button(String(localized: "Uninstall")) { model.pendingSheet = .uninstall(p.id) }
                 .buttonStyle(ChipButtonStyle())
         }
     }

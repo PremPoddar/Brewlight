@@ -163,7 +163,7 @@ struct UninstallSheet: View {
             }
         } buttons: {
             Button(String(localized: "Cancel")) { dismiss() }.keyboardShortcut(.cancelAction)
-            Button(String(localized: "Remove Completely…")) {
+            Button(String(localized: "Remove Completely")) {
                 model.pendingSheet = .removeCompletely(packageID)
             }
             Button(String(localized: "Uninstall"), role: .destructive) {

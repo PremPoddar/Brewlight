@@ -6,14 +6,17 @@ struct MenuEntry {
     var title: String
     var isOn: Bool?
     var isEnabled = true
+    var isDestructive = false
     var children: [MenuEntry]?
     var action: (@MainActor () -> Void)?
     var isSeparator = false
 
-    init(_ title: String, isOn: Bool? = nil, isEnabled: Bool = true, action: (@MainActor () -> Void)? = nil) {
+    init(_ title: String, isOn: Bool? = nil, isEnabled: Bool = true, isDestructive: Bool = false,
+         action: (@MainActor () -> Void)? = nil) {
         self.title = title
         self.isOn = isOn
         self.isEnabled = isEnabled
+        self.isDestructive = isDestructive
         self.action = action
     }
 
@@ -51,6 +54,12 @@ enum MenuPresenter {
             if e.isSeparator { menu.addItem(.separator()); continue }
             let item = NSMenuItem(title: e.title, action: nil, keyEquivalent: "")
             item.isEnabled = e.isEnabled
+            if e.isDestructive {
+                item.attributedTitle = NSAttributedString(string: e.title, attributes: [
+                    .font: NSFont.systemFont(ofSize: 13),
+                    .foregroundColor: NSColor.systemRed,
+                ])
+            }
             if let on = e.isOn { item.state = on ? .on : .off }
             if let children = e.children {
                 item.submenu = build(children)
