@@ -178,6 +178,9 @@ final class AppModel {
     private let log = Logger(subsystem: "com.prempoddar.brewlight", category: "model")
 
     init() {
+        // Greedy casks (auto-updating apps) are what `brew upgrade --greedy` upgrades; include
+        // them in the outdated check by default so Brewlight never misses those updates.
+        UserDefaults.standard.register(defaults: ["greedyCasks": true])
         userData = UserDataStore(inMemory: AppInfo.isDemo)
         operations.onFinish = { [weak self] op in self?.operationFinished(op) }
         operations.onNotice = { [weak self] _, notice in self?.handle(notice) }
@@ -354,7 +357,12 @@ final class AppModel {
         catalogGeneratedAt = catalog.generatedAt
         catalogLoadedAt = .now
         self.firstSeen = firstSeen
-        if catalog.sourceDescription != "hot" { hasFullCatalog = true }
+        if catalog.sourceDescription != "hot" {
+            hasFullCatalog = true
+            // Any brew-confirmed outdated entries that arrived before the full catalog can now be
+            // re-checked against it, so removed packages drop out of the upgrade list.
+            recomputeVisibleOutdated()
+        }
         Perf.end(t)
     }
 
@@ -470,13 +478,26 @@ final class AppModel {
 
     private func recomputeVisibleOutdated() {
         let skipped = userData.skipped
-        let visible = skipped.isEmpty ? outdated : outdated.filter { skipped[$0.key] != $0.value.available }
+        var visible = skipped.isEmpty ? outdated : outdated.filter { skipped[$0.key] != $0.value.available }
+        // Broken entries can't be upgraded; sending them to `brew upgrade` only fails. They get
+        // their own "Needs attention" section on the Updates page instead.
+        if !isCatalogLoading {
+            let broken = Set(CleanupIssues.scan(installed: Array(installed.values), package: package).map(\.inst.id))
+            visible = visible.filter { !broken.contains($0.key) }
+        }
         if visible != visibleOutdated { visibleOutdated = visible }
     }
 
     /// Installed packages Homebrew has deprecated or disabled (for the Updates page).
     var deprecatedInstalled: [Package] {
         installed.keys.compactMap { package($0) }.filter { $0.isDeprecated || $0.isDisabled }.sorted { $0.token < $1.token }
+    }
+
+    /// Installed packages that can no longer be upgraded cleanly, newest catalog permitting (Updates page).
+    var brokenEntries: [(inst: InstalledPackage, issue: CleanupIssues.Issue)] {
+        guard !isCatalogLoading, !installed.isEmpty else { return [] }
+        return CleanupIssues.scan(installed: Array(installed.values), package: package)
+            .sorted { $0.inst.token < $1.inst.token }
     }
 
     var upgradableCount: Int { visibleOutdated.values.filter { !$0.pinned }.count }

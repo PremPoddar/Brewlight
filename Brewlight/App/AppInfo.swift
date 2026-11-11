@@ -27,6 +27,9 @@ enum AppInfo {
     static var issuesURL: URL { repositoryURL.appending(path: "issues/new") }
     static var releasesURL: URL { repositoryURL.appending(path: "releases") }
     static let homebrewDonateURL = URL(string: "https://github.com/Homebrew/brew#donations")!
+    static let websiteURL = URL(string: "https://prempoddar.is-a.dev/Brewlight/")!
+    static let privacyURL = URL(string: "https://prempoddar.is-a.dev/Brewlight/privacy/")!
+    static let moreAppsURL = URL(string: "https://prempoddar.is-a.dev/apps/")!
 
     /// Demo mode uses bundled fixture data and a mock runner (launch with `-demo`).
     static let isDemo = ProcessInfo.processInfo.arguments.contains("-demo")

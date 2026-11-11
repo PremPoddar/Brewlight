@@ -64,6 +64,9 @@ struct UpdatesView: View {
                 let deprecated = model.deprecatedInstalled
                 if !deprecated.isEmpty { deprecatedSection(deprecated) }
 
+                let broken = model.brokenEntries
+                if !broken.isEmpty { brokenSection(broken) }
+
                 if !model.userData.skipped.isEmpty {
                     skippedSection
                 }
@@ -140,6 +143,27 @@ struct UpdatesView: View {
             }
             VStack(spacing: 0) {
                 ForEach(pkgs) { p in DeprecatedRow(package: p) }
+            }
+            .background(RoundedRectangle(cornerRadius: 18, style: .continuous).fill(Theme.card))
+            .overlay(RoundedRectangle(cornerRadius: 18, style: .continuous).strokeBorder(Theme.separator))
+            .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
+        }
+        .padding(.top, 8)
+    }
+
+    /// Installed packages that can no longer be upgraded cleanly: removed from Homebrew, or
+    /// deleted by hand while brew still tracks them. Uninstalling clears each problem.
+    private func brokenSection(_ issues: [(inst: InstalledPackage, issue: CleanupIssues.Issue)]) -> some View {
+        VStack(alignment: .leading, spacing: 10) {
+            VStack(alignment: .leading, spacing: 2) {
+                Text(String(localized: "Needs attention (\(issues.count))")).font(.system(size: 15, weight: .semibold))
+                Text(String(localized: "Homebrew can't upgrade these. Remove the broken entries so upgrades run cleanly."))
+                    .font(.system(size: 12)).foregroundStyle(Theme.text2)
+            }
+            VStack(spacing: 0) {
+                ForEach(issues, id: \.inst.id) { issue in
+                    BrokenRow(item: issue)
+                }
             }
             .background(RoundedRectangle(cornerRadius: 18, style: .continuous).fill(Theme.card))
             .overlay(RoundedRectangle(cornerRadius: 18, style: .continuous).strokeBorder(Theme.separator))
@@ -288,6 +312,53 @@ struct DeprecatedRow: View {
         let reason = (p.disableReason ?? p.deprecationReason ?? "").capitalizedFirst
         if let r = replacement { return String(localized: "\(reason). Homebrew suggests \(r.token) instead.") }
         return String(localized: "\(reason). Homebrew doesn't name a replacement.")
+    }
+}
+
+struct BrokenRow: View {
+    let item: (inst: InstalledPackage, issue: CleanupIssues.Issue)
+    @Environment(AppModel.self) private var model
+
+    var body: some View {
+        HStack(spacing: 14) {
+            PackageIcon(package: package, size: 34, appPath: model.installed[item.inst.id]?.appPaths.first)
+            VStack(alignment: .leading, spacing: 2) {
+                HStack(spacing: 6) {
+                    Text(item.inst.token).font(.system(size: 13, weight: .semibold))
+                    KindBadge(kind: item.inst.kind)
+                    Text(reason).font(.system(size: 10, weight: .semibold)).foregroundStyle(Theme.red)
+                        .padding(.horizontal, 6).padding(.vertical, 1)
+                        .background(Capsule().fill(Theme.red.opacity(0.14)))
+                }
+                Text(detail).font(.system(size: 12)).foregroundStyle(Theme.text2).lineLimit(2)
+            }
+            Spacer()
+            RowActionButton(title: String(localized: "Uninstall…"), danger: true) {
+                model.pendingSheet = .uninstall(item.inst.id)
+            }
+        }
+        .padding(.horizontal, 20)
+        .frame(minHeight: 58)
+        .overlay(alignment: .bottom) { Rectangle().fill(Theme.separator).frame(height: 1) }
+    }
+
+    private var package: Package {
+        model.package(item.inst.id) ?? model.packageOrStub(item.inst)
+    }
+
+    private var reason: String {
+        item.issue == .removedFromHomebrew
+            ? String(localized: "no longer in Homebrew")
+            : String(localized: "app deleted outside brew")
+    }
+
+    private var detail: String {
+        switch item.issue {
+        case .removedFromHomebrew:
+            String(localized: "Not in any tap anymore, so `brew upgrade` fails on it. Uninstall to clear the entry.")
+        case .appDeletedOutsideBrew:
+            String(localized: "The app was deleted outside Homebrew (Trash or ⌘⌫), so brew still thinks it's installed. Uninstall to remove the stale entry.")
+        }
     }
 }
 

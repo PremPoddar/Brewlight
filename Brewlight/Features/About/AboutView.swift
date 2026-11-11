@@ -42,12 +42,12 @@ struct AboutView: View {
             // Two rows of single-line links; nothing wraps mid-word at the window's fixed width.
             VStack(spacing: 6) {
                 HStack(spacing: 16) {
-                    Link(String(localized: "Website"), destination: AppInfo.repositoryURL)
+                    Link(String(localized: "Website"), destination: AppInfo.websiteURL)
                     Link("GitHub", destination: AppInfo.repositoryURL)
-                    Button(String(localized: "Privacy")) { openBundled("Privacy", ext: "md") }.buttonStyle(.link)
+                    Link(String(localized: "Privacy"), destination: AppInfo.privacyURL)
                 }
                 HStack(spacing: 16) {
-                    Button(String(localized: "Acknowledgements")) { openBundled("Acknowledgements", ext: "md") }.buttonStyle(.link)
+                    Link(String(localized: "Discover More Apps"), destination: AppInfo.moreAppsURL)
                     Link(String(localized: "Donate to Homebrew"), destination: AppInfo.homebrewDonateURL)
                 }
             }
@@ -82,9 +82,5 @@ struct AboutView: View {
         var c = URLComponents(url: AppInfo.issuesURL, resolvingAgainstBaseURL: false)!
         c.queryItems = [URLQueryItem(name: "body", value: "\n\n---\n```\n\(systemInfo)\n```")]
         if let url = c.url { NSWorkspace.shared.open(url) }
-    }
-
-    private func openBundled(_ name: String, ext: String) {
-        if let url = Bundle.main.url(forResource: name, withExtension: ext) { NSWorkspace.shared.open(url) }
     }
 }

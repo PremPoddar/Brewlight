@@ -3,7 +3,7 @@
 </p>
 
 <p align="center">
-  <a href="https://prempoddar.github.io/Brewlight/"><img alt="Website" src="https://img.shields.io/badge/website-try_it-F8AC3D?labelColor=1A0F0A&style=for-the-badge"></a>
+  <a href="https://prempoddar.is-a.dev/Brewlight/"><img alt="Website" src="https://img.shields.io/badge/website-try_it-F8AC3D?labelColor=1A0F0A&style=for-the-badge"></a>
   <img alt="macOS 26 Tahoe or later" src="https://img.shields.io/badge/macOS-26%2B-FFF4E2?labelColor=1A0F0A&style=for-the-badge&logo=apple&logoColor=FFF4E2">
   <img alt="Swift 6" src="https://img.shields.io/badge/Swift-6-F2557A?labelColor=1A0F0A&style=for-the-badge&logo=swift&logoColor=F2557A">
   <img alt="Six languages" src="https://img.shields.io/badge/languages-6-2EC4A6?labelColor=1A0F0A&style=for-the-badge">
@@ -12,7 +12,7 @@
 </p>
 
 <p align="center">
-  <a href="https://prempoddar.github.io/Brewlight/"><b>Website</b></a>
+  <a href="https://prempoddar.is-a.dev/Brewlight/"><b>Website</b></a>
   &nbsp;&nbsp;|&nbsp;&nbsp;
   <a href="#install"><b>Install</b></a>
   &nbsp;&nbsp;|&nbsp;&nbsp;

@@ -749,6 +749,46 @@ final class BundleToken {}
     }
 }
 
+// MARK: Broken entries
+
+@Suite struct CleanupIssueTests {
+    private func inst(_ kind: PackageKind, _ token: String, appPaths: [String] = []) -> InstalledPackage {
+        InstalledPackage(kind: kind, token: token, versions: ["1.0"], linkedVersion: nil,
+                         installedOnRequest: true, installedAsDependency: false, pouredFromBottle: true,
+                         installedAt: nil, runtimeDependencies: [], tap: "homebrew/core", isPinned: false,
+                         appPaths: appPaths)
+    }
+
+    private func catalog(_ kind: PackageKind, _ token: String, appNames: [String] = []) -> Package {
+        var p = Package(kind: kind, token: token, fullName: token, displayName: token, desc: "", homepage: "",
+                        version: "2.0", tap: kind == .cask ? "homebrew/cask" : "homebrew/core")
+        p.appNames = appNames
+        return p
+    }
+
+    @Test func classifiesBrokenEntries() {
+        let installed = [
+            inst(.formula, "goneformula"),                                   // not in any tap → removed
+            inst(.cask, "ghostcask"),                                        // not in any tap → removed
+            inst(.cask, "deletedapp"),                                       // catalog expects an app, none on disk → stale
+            inst(.cask, "fonttool"),                                         // cask with no app artifact → fine
+            inst(.cask, "chrome", appPaths: ["/Applications/Google Chrome.app"]), // app present → fine
+        ]
+        let packages = [
+            "cask:deletedapp": catalog(.cask, "deletedapp", appNames: ["DeletedApp.app"]),
+            "cask:fonttool": catalog(.cask, "fonttool"),
+            "cask:chrome": catalog(.cask, "chrome", appNames: ["Google Chrome.app"]),
+        ]
+        let result = CleanupIssues.scan(installed: installed, package: { packages[$0] })
+        #expect(result.count == 3)
+        #expect(result.first { $0.inst.token == "goneformula" }?.issue == .removedFromHomebrew)
+        #expect(result.first { $0.inst.token == "ghostcask" }?.issue == .removedFromHomebrew)
+        #expect(result.first { $0.inst.token == "deletedapp" }?.issue == .appDeletedOutsideBrew)
+        #expect(!result.contains { $0.inst.token == "fonttool" })
+        #expect(!result.contains { $0.inst.token == "chrome" })
+    }
+}
+
 // MARK: First seen
 
 @Suite struct FirstSeenTests {

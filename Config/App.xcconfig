@@ -1,8 +1,8 @@
 // Single place for the app's identity.
 APP_DISPLAY_NAME = Brewlight
 APP_BUNDLE_ID = com.prempoddar.brewlight
-APP_VERSION = 1.1.0
-APP_BUILD = 2
+APP_VERSION = 1.2.0
+APP_BUILD = 3
 APP_CASK_TOKEN = brewlight
 APP_REPO_URL = https:/$()/github.com/PremPoddar/Brewlight
 MACOSX_DEPLOYMENT_TARGET = 26.0

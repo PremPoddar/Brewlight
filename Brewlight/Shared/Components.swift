@@ -94,16 +94,17 @@ struct KindBadge: View {
 struct RowActionButton: View {
     let title: String
     var prominent = true
+    var danger = false
     let action: () -> Void
 
     var body: some View {
         Button(action: action) {
             Text(title)
                 .font(.system(size: 12, weight: .semibold))
-                .foregroundStyle(prominent ? Theme.accentText : Theme.text)
+                .foregroundStyle(danger ? Theme.red : (prominent ? Theme.accentText : Theme.text))
                 .padding(.horizontal, 14)
                 .padding(.vertical, 5)
-                .background(Capsule().fill(prominent ? Theme.accentTint : Theme.chip))
+                .background(Capsule().fill(danger ? Theme.red.opacity(0.15) : (prominent ? Theme.accentTint : Theme.chip)))
                 .contentShape(Capsule())
         }
         .buttonStyle(.plain)
