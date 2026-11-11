@@ -7,6 +7,12 @@ on:
 #   DEVELOPER_ID_CERT_PASS    its password
 #   DEVELOPER_ID              "Developer ID Application: Name (TEAMID)"
 #   NOTARY_APPLE_ID, NOTARY_TEAM_ID, NOTARY_PASSWORD  (app-specific password)
+#
+# When the secrets are absent the DMG is ad-hoc signed and not notarized
+# (users click Open Anyway once), still attached to the release.
+env:
+  HAS_CERT: ${{ secrets.DEVELOPER_ID_CERT_P12 != '' && secrets.DEVELOPER_ID_CERT_PASS != '' && secrets.DEVELOPER_ID != '' }}
+  HAS_NOTARY: ${{ secrets.NOTARY_APPLE_ID != '' && secrets.NOTARY_TEAM_ID != '' && secrets.NOTARY_PASSWORD != '' }}
 jobs:
   release:
     runs-on: macos-26
@@ -14,6 +20,7 @@ jobs:
       - uses: actions/checkout@v4
       - run: brew install xcodegen
       - name: Import signing certificate
+        if: env.HAS_CERT == 'true'
         env:
           P12: ${{ secrets.DEVELOPER_ID_CERT_P12 }}
           PASS: ${{ secrets.DEVELOPER_ID_CERT_PASS }}
@@ -25,11 +32,12 @@ jobs:
           security import cert.p12 -k build.keychain -P "$PASS" -T /usr/bin/codesign
           security set-key-partition-list -S apple-tool:,apple: -s -k ci build.keychain
       - name: Store notary credentials
+        if: env.HAS_CERT == 'true' && env.HAS_NOTARY == 'true'
         run: xcrun notarytool store-credentials brewlight --apple-id "${{ secrets.NOTARY_APPLE_ID }}" --team-id "${{ secrets.NOTARY_TEAM_ID }}" --password "${{ secrets.NOTARY_PASSWORD }}"
       - name: Release
         env:
-          DEVELOPER_ID: ${{ secrets.DEVELOPER_ID }}
-          NOTARY_PROFILE: brewlight
+          DEVELOPER_ID: ${{ env.HAS_CERT == 'true' && secrets.DEVELOPER_ID || '' }}
+          NOTARY_PROFILE: ${{ env.HAS_CERT == 'true' && env.HAS_NOTARY == 'true' && 'brewlight' || '' }}
         run: scripts/release.sh
       - uses: softprops/action-gh-release@v2
         with:
