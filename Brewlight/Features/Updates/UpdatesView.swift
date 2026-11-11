@@ -157,7 +157,7 @@ struct UpdatesView: View {
         VStack(alignment: .leading, spacing: 10) {
             VStack(alignment: .leading, spacing: 2) {
                 Text(String(localized: "Needs attention (\(issues.count))")).font(.system(size: 15, weight: .semibold))
-                Text(String(localized: "Homebrew can't upgrade these. Remove the broken entries so upgrades run cleanly."))
+                Text(String(localized: "These entries are broken or stale. Uninstall them so upgrades run cleanly."))
                     .font(.system(size: 12)).foregroundStyle(Theme.text2)
             }
             VStack(spacing: 0) {

@@ -480,9 +480,11 @@ final class AppModel {
         let skipped = userData.skipped
         var visible = skipped.isEmpty ? outdated : outdated.filter { skipped[$0.key] != $0.value.available }
         // Broken entries can't be upgraded; sending them to `brew upgrade` only fails. They get
-        // their own "Needs attention" section on the Updates page instead.
-        if !isCatalogLoading {
-            let broken = Set(CleanupIssues.scan(installed: Array(installed.values), package: package).map(\.inst.id))
+        // their own "Needs attention" section on the Updates page instead. Only judged against a
+        // full catalog: the hot subset or a failed refresh would flag half the installed list.
+        if hasFullCatalog {
+            let broken = Set(CleanupIssues.scan(installed: Array(installed.values), aliases: formulaAliases,
+                                                package: package).map(\.inst.id))
             visible = visible.filter { !broken.contains($0.key) }
         }
         if visible != visibleOutdated { visibleOutdated = visible }
@@ -495,8 +497,8 @@ final class AppModel {
 
     /// Installed packages that can no longer be upgraded cleanly, newest catalog permitting (Updates page).
     var brokenEntries: [(inst: InstalledPackage, issue: CleanupIssues.Issue)] {
-        guard !isCatalogLoading, !installed.isEmpty else { return [] }
-        return CleanupIssues.scan(installed: Array(installed.values), package: package)
+        guard hasFullCatalog, !installed.isEmpty else { return [] }
+        return CleanupIssues.scan(installed: Array(installed.values), aliases: formulaAliases, package: package)
             .sorted { $0.inst.token < $1.inst.token }
     }
 
@@ -530,6 +532,8 @@ final class AppModel {
         installed = Dictionary(list.map { ($0.id, $0) }) { a, _ in a }
         Perf.end(t)
         recomputeOutdatedLocally()
+        // appPaths may have changed (e.g. the app was deleted by hand) even when outdated didn't.
+        recomputeVisibleOutdated()
         saveHotSnapshot()
     }
 

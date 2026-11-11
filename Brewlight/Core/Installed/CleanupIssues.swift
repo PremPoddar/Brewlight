@@ -11,11 +11,14 @@ enum CleanupIssues {
         case appDeletedOutsideBrew
     }
 
-    static func scan(installed: [InstalledPackage], package: (String) -> Package?)
+    static func scan(installed: [InstalledPackage], aliases: [String: String] = [:], package: (String) -> Package?)
         -> [(inst: InstalledPackage, issue: Issue)] {
         var result: [(inst: InstalledPackage, issue: Issue)] = []
         for inst in installed {
-            if package(inst.id) == nil {
+            // Renamed formulae still resolve through their old name's alias.
+            let known = package(inst.id) != nil
+                || (inst.kind == .formula && aliases[inst.token].map { package(Package.id(.formula, $0)) } != nil)
+            if !known {
                 result.append((inst, .removedFromHomebrew))
             } else if inst.kind == .cask, inst.appPaths.isEmpty,
                       let p = package(inst.id), !p.appNames.isEmpty {

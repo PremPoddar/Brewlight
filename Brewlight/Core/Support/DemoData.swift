@@ -104,6 +104,7 @@ enum DemoData {
                              installedAt: Date(timeIntervalSince1970: 1_788_300_000 - Double(t.count) * 86_400),
                              runtimeDependencies: rows.first { $0.token == t }?.deps ?? [], tap: nil,
                              isPinned: t == "postgresql@17",
+                             appPaths: k == .cask ? ["/Applications/\(t.capitalized).app"] : [],
                              linkedIntoPrefix: k == .formula ? t != "python@3.12" : nil)
         }
 

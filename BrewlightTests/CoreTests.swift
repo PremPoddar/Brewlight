@@ -773,19 +773,25 @@ final class BundleToken {}
             inst(.cask, "deletedapp"),                                       // catalog expects an app, none on disk → stale
             inst(.cask, "fonttool"),                                         // cask with no app artifact → fine
             inst(.cask, "chrome", appPaths: ["/Applications/Google Chrome.app"]), // app present → fine
+            inst(.formula, "rg"),                                            // renamed upstream; alias still resolves → fine
         ]
         let packages = [
             "cask:deletedapp": catalog(.cask, "deletedapp", appNames: ["DeletedApp.app"]),
             "cask:fonttool": catalog(.cask, "fonttool"),
             "cask:chrome": catalog(.cask, "chrome", appNames: ["Google Chrome.app"]),
+            "formula:ripgrep": catalog(.formula, "ripgrep"),
         ]
-        let result = CleanupIssues.scan(installed: installed, package: { packages[$0] })
+        let aliases = ["rg": "ripgrep"]
+        let result = CleanupIssues.scan(installed: installed, aliases: aliases, package: { packages[$0] })
         #expect(result.count == 3)
         #expect(result.first { $0.inst.token == "goneformula" }?.issue == .removedFromHomebrew)
         #expect(result.first { $0.inst.token == "ghostcask" }?.issue == .removedFromHomebrew)
         #expect(result.first { $0.inst.token == "deletedapp" }?.issue == .appDeletedOutsideBrew)
         #expect(!result.contains { $0.inst.token == "fonttool" })
         #expect(!result.contains { $0.inst.token == "chrome" })
+        #expect(!result.contains { $0.inst.token == "rg" })
+        // Without the alias, the renamed formula is indistinguishable from a removed one.
+        #expect(CleanupIssues.scan(installed: installed, package: { packages[$0] }).count == 4)
     }
 }
 
