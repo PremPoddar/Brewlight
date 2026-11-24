@@ -10,6 +10,8 @@ on:
 #
 # When the secrets are absent the DMG is ad-hoc signed and not notarized
 # (users click Open Anyway once), still attached to the release.
+permissions:
+  contents: write
 env:
   HAS_CERT: ${{ secrets.DEVELOPER_ID_CERT_P12 != '' && secrets.DEVELOPER_ID_CERT_PASS != '' && secrets.DEVELOPER_ID != '' }}
   HAS_NOTARY: ${{ secrets.NOTARY_APPLE_ID != '' && secrets.NOTARY_TEAM_ID != '' && secrets.NOTARY_PASSWORD != '' }}
