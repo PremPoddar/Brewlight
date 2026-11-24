@@ -1,7 +1,6 @@
 cask "brewlight" do
   version "1.3.0"
-  # shortcut: sha256 is still 1.1.0's until the v1.3.0 DMG is published; replace right after tagging
-  sha256 "089fbd3e7ea75bc69a9ea2d408500f1885ce47fc4f09e92931b0be1eab80c01f"
+  sha256 "7222dd8ce5b54034068ac9721739f45604fbd87568c97810a33608bbf287ed76"
 
   url "https://github.com/PremPoddar/Brewlight/releases/download/v#{version}/Brewlight.dmg"
   name "Brewlight"
