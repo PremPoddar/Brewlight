@@ -283,8 +283,8 @@ struct StatusCard: View {
                 Text(busy?.title ?? (model.isRefreshingCatalog ? String(localized: "Refreshing index…") : String(localized: "Ready to brew")))
                     .font(.system(size: 12, weight: .semibold)).lineLimit(1)
             }
-            Text(statusLine(formulae: formulae, casks: casks))
-                .font(.system(size: 11)).foregroundStyle(Theme.text2).lineSpacing(2)
+            Text(busy?.statusLabel ?? statusLine(formulae: formulae, casks: casks))
+                .font(.system(size: 11)).foregroundStyle(Theme.text2).lineSpacing(2).lineLimit(2)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(12)

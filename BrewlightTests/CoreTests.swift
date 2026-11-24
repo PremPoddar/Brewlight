@@ -349,12 +349,48 @@ final class BundleToken {}
 @Suite struct ParserTests {
     @Test func progress() {
         #expect(ProgressParser.parse("==> Downloading https://ghcr.io/v2/x").phase == .downloading)
-        #expect(ProgressParser.parse("==> Pouring ffmpeg--8.0.1.arm64_tahoe.bottle.tar.gz").phase == .pouring)
+        #expect(ProgressParser.parse("==> Pouring ffmpeg--8.0.1.arm64_tahoe.bottle.tar.gz").phase == .installing)
         #expect(ProgressParser.parse("######################################   64.0%").percent == 0.64)
         #expect(ProgressParser.parse("==> Linking ffmpeg").phase == .linking)
         #expect(ProgressParser.parse("Error: No such keg").isError)
         #expect(ProgressParser.parse("sudo: a terminal is required to read the password").needsTerminal)
         #expect(ProgressParser.parse("Uninstalling /opt/homebrew/Cellar/jq/1.8.1... (20 files)").phase == .uninstalling)
+    }
+
+    @Test func homebrewSevenHeadings() {
+        // Real output from `brew install` in Brewlight's non-TTY environment: downloads are
+        // announced as "Fetching downloads for:" and a bottle install goes straight to Pouring.
+        let fetch = ProgressParser.parse("==> Fetching downloads for: hello")
+        #expect(fetch.phase == .downloading)
+        #expect(fetch.subject == "hello")
+
+        let pour = ProgressParser.parse("==> Pouring hello--2.12.3.arm64_golden_gate.bottle.1.tar.gz")
+        #expect(pour.phase == .installing)
+        #expect(pour.subject == "hello")
+
+        let cask = ProgressParser.parse("==> Installing Cask google-chrome")
+        #expect(cask.phase == .installing)
+        #expect(cask.subject == "google-chrome")
+
+        let upgrade = ProgressParser.parse("==> Upgrading wget")
+        #expect(upgrade.phase == .upgrading)
+        #expect(upgrade.subject == "wget")
+        #expect(ProgressParser.parse("==> Upgrading 2 outdated packages:").subject == nil)
+    }
+
+    @MainActor @Test func operationStatusFollowsBrewOutput() {
+        let op = BrewOperation(title: "Install hello", args: ["install", "hello"], packages: ["hello"], isMutating: true)
+        op.state = .running
+        op.applyProgress(ProgressParser.parse("==> Fetching downloads for: hello"))
+        #expect(op.phase == .downloading)
+        #expect(op.statusLabel.contains("hello"))
+        op.applyProgress(ProgressParser.parse("==> Pouring hello--2.12.3.arm64_golden_gate.bottle.1.tar.gz"))
+        #expect(op.phase == .installing)
+        #expect(op.statusLabel.contains("hello"))
+        // An installer's own percentages must not send the phase back to downloading.
+        op.applyProgress(ProgressParser.parse("######## 42.0%"))
+        #expect(op.phase == .installing)
+        #expect(op.percent == nil)
     }
 
     @Test func doctorWarnings() {

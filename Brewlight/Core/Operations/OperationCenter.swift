@@ -22,6 +22,8 @@ final class BrewOperation: Identifiable {
     let isMutating: Bool
     var state: State = .queued
     var phase: OperationPhase = .queued
+    /// The package brew last named, used to say "Downloading hello…" instead of just "Downloading…".
+    var subject: String?
     var percent: Double?
     private(set) var log: [OutputLine] = []
     var needsTerminal = false
@@ -73,6 +75,38 @@ final class BrewOperation: Identifiable {
     var duration: TimeInterval? {
         guard let s = startedAt else { return nil }
         return (finishedAt ?? .now).timeIntervalSince(s)
+    }
+    /// Phase with the package name when brew gave one; a single-package command always has one.
+    var statusLabel: String {
+        phase.label(subject: subject ?? (packages.count == 1 ? packages.first : nil))
+    }
+    /// Status for one package in a multi-package command: don't name another package.
+    func statusLabel(for token: String) -> String {
+        guard let subject, subject != token, !subject.hasSuffix("/" + token) else { return statusLabel }
+        return phase.label
+    }
+    var statusText: String {
+        switch state {
+        case .queued: String(localized: "Queued")
+        case .running: statusLabel
+        case .succeeded: String(localized: "Done in \(Int(duration ?? 0))s")
+        case .failed(let c): String(localized: "Failed (exit \(c))")
+        case .cancelled: String(localized: "Cancelled")
+        }
+    }
+    /// Whether this operation is installing, upgrading or removing the given package token.
+    func covers(_ token: String) -> Bool {
+        packages.contains { $0 == token || $0.hasSuffix("/" + token) }
+    }
+    func applyProgress(_ u: ProgressParser.Update) {
+        if let p = u.phase { phase = p }
+        if let subject = u.subject { self.subject = subject }
+        // Percentages come from download progress bars; don't let a later one
+        // (e.g. an installer's own progress) flip the phase back to downloading.
+        if let pct = u.percent, phase == .starting || phase == .downloading {
+            phase = .downloading
+            percent = pct
+        }
     }
     var errorLines: [String] { log.filter { $0.kind == .error }.map(\.text) }
     var fullLog: String { log.map(\.text).joined(separator: "\n") }
@@ -202,8 +236,7 @@ final class OperationCenter {
                     lastOutput = .now
                     if let notice = op.append(line) { self.onNotice?(op, notice) }
                     let u = ProgressParser.parse(line.text)
-                    if let p = u.phase { op.phase = p }
-                    if let pct = u.percent { op.percent = pct }
+                    op.applyProgress(u)
                     if u.needsTerminal { op.needsTerminal = true }
                 case .exit(let s):
                     status = s

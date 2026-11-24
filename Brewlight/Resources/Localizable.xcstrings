@@ -3919,6 +3919,40 @@
         }
       }
     },
+    "Building %@…": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "%@ wird erstellt …"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Compilando %@…"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Compilation de %@…"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "%@ をビルド中…"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "正在构建 %@…"
+          }
+        }
+      }
+    },
     "Building…": {
       "localizations": {
         "de": {
@@ -7255,6 +7289,40 @@
         }
       }
     },
+    "Downloading %@…": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "%@ wird geladen …"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Descargando %@…"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Téléchargement de %@…"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "%@ をダウンロード中…"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "正在下载 %@…"
+          }
+        }
+      }
+    },
     "Downloading…": {
       "localizations": {
         "de": {
@@ -10246,6 +10314,40 @@
         }
       }
     },
+    "Installing %@…": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "%@ wird installiert …"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Instalando %@…"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Installation de %@…"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "%@ をインストール中…"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "正在安装 %@…"
+          }
+        }
+      }
+    },
     "Installing…": {
       "localizations": {
         "de": {
@@ -11242,6 +11344,40 @@
           "stringUnit": {
             "state": "needs_review",
             "value": "已链接"
+          }
+        }
+      }
+    },
+    "Linking %@…": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "%@ wird verknüpft …"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Enlazando %@…"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Liaison de %@…"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "%@ をリンク中…"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "正在链接 %@…"
           }
         }
       }
@@ -15803,6 +15939,40 @@
           "stringUnit": {
             "state": "needs_review",
             "value": "移除软件包。它的设置和数据会保留在你的 Mac 上。"
+          }
+        }
+      }
+    },
+    "Removing %@…": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "%@ wird entfernt …"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Eliminando %@…"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Suppression de %@…"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "%@ を削除中…"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "正在移除 %@…"
           }
         }
       }
@@ -20872,6 +21042,40 @@
           "stringUnit": {
             "state": "needs_review",
             "value": "升级可能会造成问题：数据库或语言的新大版本可能需要迁移，正在运行的应用也可能被替换。如果你不熟悉如何修复这类问题，请保持关闭。"
+          }
+        }
+      }
+    },
+    "Upgrading %@…": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "%@ wird aktualisiert …"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Actualizando %@…"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Mise à niveau de %@…"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "%@ をアップグレード中…"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "正在升级 %@…"
           }
         }
       }

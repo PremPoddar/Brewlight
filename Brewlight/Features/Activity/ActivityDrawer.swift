@@ -66,10 +66,13 @@ struct OperationRow: View {
             VStack(alignment: .leading, spacing: 2) {
                 Text(op.title).font(.system(size: 12, weight: .semibold)).lineLimit(1)
                 if op.state == .running {
-                    ProgressView(value: op.percent ?? 0).progressViewStyle(.linear).tint(Theme.accent)
-                        .opacity(op.percent == nil ? 0.4 : 1)
+                    if let pct = op.percent {
+                        ProgressView(value: pct).progressViewStyle(.linear).tint(Theme.accent)
+                    } else {
+                        ProgressView().progressViewStyle(.linear).tint(Theme.accent)
+                    }
                 }
-                Text(statusText).font(.system(size: 11)).foregroundStyle(Theme.text2).lineLimit(1)
+                Text(op.statusText).font(.system(size: 11)).foregroundStyle(Theme.text2).lineLimit(1)
             }
             Spacer()
             if !op.state.isFinished {
@@ -91,15 +94,6 @@ struct OperationRow: View {
         }
     }
 
-    private var statusText: String {
-        switch op.state {
-        case .queued: String(localized: "Queued")
-        case .running: op.phase.label
-        case .succeeded: String(localized: "Done in \(Int(op.duration ?? 0))s")
-        case .failed(let c): String(localized: "Failed (exit \(c))")
-        case .cancelled: String(localized: "Cancelled")
-        }
-    }
 }
 
 struct OperationLogView: View {

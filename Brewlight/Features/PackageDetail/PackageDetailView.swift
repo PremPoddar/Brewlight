@@ -102,7 +102,16 @@ struct PackageDetailView: View {
 
     @ViewBuilder
     private func primaryButton(_ p: Package, inst: InstalledPackage?, out: OutdatedInfo?) -> some View {
-        if inst == nil {
+        if let op = model.operations.active.first(where: { $0.covers(p.token) }) {
+            HStack(spacing: 8) {
+                ProgressView().controlSize(.small)
+                Text(op.statusLabel(for: p.token)).font(.system(size: 13, weight: .semibold)).lineLimit(1)
+            }
+            .padding(.horizontal, 16)
+            .frame(height: 34)
+            .background(Capsule().fill(Theme.chip))
+            .accessibilityElement(children: .combine)
+        } else if inst == nil {
             Button(String(localized: "Install")) { model.pendingSheet = .install([p.id]) }
                 .buttonStyle(PrimaryPillButtonStyle())
                 .disabled(p.isDisabled)

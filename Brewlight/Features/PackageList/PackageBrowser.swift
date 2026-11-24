@@ -298,6 +298,7 @@ struct PackageRow: View {
     var body: some View {
         let inst = model.installed[package.id]
         let out = model.visibleOutdated[package.id]
+        let op = model.operations.active.first { $0.covers(package.token) }
         HStack(spacing: 12) {
             PackageIcon(package: package, size: 32, appPath: inst?.appPaths.first)
             VStack(alignment: .leading, spacing: 1) {
@@ -315,7 +316,10 @@ struct PackageRow: View {
                         Image(systemName: "exclamationmark.triangle.fill").font(.system(size: 9)).foregroundStyle(.orange)
                     }
                 }
-                Text(package.desc).font(.system(size: 12)).foregroundStyle(Theme.text2).lineLimit(1)
+                Text(op?.statusLabel(for: package.token) ?? package.desc)
+                    .font(.system(size: 12))
+                    .foregroundStyle(op == nil ? Theme.text2 : Theme.accentText)
+                    .lineLimit(1)
             }
             Spacer(minLength: 8)
             if let metric {

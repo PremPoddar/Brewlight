@@ -96,7 +96,7 @@ struct UpdatesView: View {
                 .frame(width: 28, alignment: .leading)
                 Text(String(localized: "Package")).frame(maxWidth: .infinity, alignment: .leading)
                 Text(String(localized: "Version")).frame(width: 220, alignment: .leading)
-                Spacer().frame(width: 120)
+                Spacer().frame(width: 150)
             }
             .font(.system(size: 11, weight: .semibold))
             .foregroundStyle(Theme.text3)
@@ -207,7 +207,7 @@ struct UpdateRow: View {
 
     var body: some View {
         let p = model.package(info.id)
-        let op = model.operations.active.first { $0.packages.contains(info.token) }
+        let op = model.operations.active.first { $0.covers(info.token) }
         HStack(spacing: 16) {
             checkbox(isOn: isOn, action: toggle).frame(width: 28, alignment: .leading)
                 .accessibilityLabel(String(localized: "Include \(info.token)"))
@@ -239,19 +239,23 @@ struct UpdateRow: View {
                 if let op {
                     VStack(alignment: .leading, spacing: 5) {
                         HStack {
-                            Text(op.phase.label)
-                            Spacer()
+                            Text(op.statusLabel(for: info.token)).lineLimit(1)
+                            Spacer(minLength: 4)
                             if let pct = op.percent { Text("\(Int(pct * 100))%").monospacedDigit() }
                         }
                         .font(.system(size: 11)).foregroundStyle(Theme.text2)
-                        ProgressView(value: op.percent ?? 0).progressViewStyle(.linear).tint(Theme.accent)
+                        if let pct = op.percent {
+                            ProgressView(value: pct).progressViewStyle(.linear).tint(Theme.accent)
+                        } else {
+                            ProgressView().progressViewStyle(.linear).tint(Theme.accent)
+                        }
                     }
-                    .frame(width: 110)
+                    .frame(width: 150)
                 } else {
                     RowActionButton(title: String(localized: "Upgrade")) { model.upgrade([info.id]) }
                 }
             }
-            .frame(width: 120)
+            .frame(width: 150)
         }
         .padding(.horizontal, 20)
         .frame(height: 58)
