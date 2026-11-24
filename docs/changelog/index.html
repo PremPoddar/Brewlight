@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Release notes · Brewlight</title>
+<meta name="description" content="Every Brewlight release, newest first: what changed and when.">
+<link rel="icon" type="image/png" href="../assets/favicon.png">
+<link rel="apple-touch-icon" href="../assets/icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@700&family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,300..800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/site.css">
+<style>
+:root {
+  --stout: #1A0F0A;
+  --stout-2: #24150D;
+  --stout-3: #321E13;
+  --line: #4A3022;
+  --foam: #FFF4E2;
+  --muted: #C7B19E;
+  --amber: #F8AC3D;
+  --cherry: #F2557A;
+  --hop: #2EC4A6;
+  --ink: #2A1903;
+  --display: "Bricolage Grotesque", ui-sans-serif, system-ui, sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, Menlo, monospace;
+  --gutter: clamp(16px, 4vw, 56px);
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0; min-height: 100vh; background: var(--stout); color: var(--foam);
+  font-family: var(--display); font-size: 18px; line-height: 1.6; overflow-x: hidden;
+}
+a { color: inherit; text-decoration-color: var(--amber); text-underline-offset: 3px; }
+a:hover { color: var(--amber); }
+:focus-visible { outline: 3px solid var(--amber); outline-offset: 3px; border-radius: 6px; }
+.wrap { width: 100%; max-width: 1240px; margin: 0 auto; padding: 0 var(--gutter); }
+.read { max-width: 820px; }
+
+.hero { padding-top: clamp(24px, 5vw, 64px); }
+.kicker { margin: 0 0 4px; font-weight: 800; font-size: clamp(16px, 1.8vw, 20px); color: var(--muted); }
+h1 {
+  margin: 0; font-family: "Caveat", "Bradley Hand", cursive; font-weight: 700;
+  font-size: clamp(68px, 11vw, 140px); line-height: .9; transform: rotate(-2deg); transform-origin: left center;
+}
+h1 .u { position: relative; display: inline-block; }
+.scribble { position: absolute; left: -2%; bottom: -.08em; width: 104%; height: .24em; overflow: visible; pointer-events: none; }
+.scribble path { fill: none; stroke: var(--hop); stroke-width: 3.4; stroke-linecap: round; }
+.lede { max-width: 40ch; margin: clamp(26px, 3.5vw, 40px) 0 0; font-size: clamp(20px, 2.1vw, 25px); line-height: 1.4; }
+.updated { margin: 14px 0 0; color: var(--muted); font-size: 15px; }
+.short { margin: clamp(26px, 3.5vw, 40px) 0 0; background: var(--stout-2); border: 1px solid var(--line); border-radius: 18px; padding: 18px 22px; font-size: clamp(17px, 1.8vw, 19px); line-height: 1.5; }
+.short b { color: var(--amber); }
+
+article { padding-bottom: clamp(56px, 8vw, 104px); }
+.release { margin-top: clamp(36px, 5vw, 56px); padding-top: 28px; border-top: 1px solid var(--line); }
+.release:first-child { margin-top: clamp(48px, 6vw, 72px); }
+.release-head { display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap; }
+.release-head h2 { margin: 0; font-size: clamp(26px, 3vw, 34px); line-height: 1.15; font-weight: 750; letter-spacing: -0.015em; }
+.release-head .date { color: var(--muted); font: 500 14px var(--mono); }
+.badge {
+  align-self: center; background: var(--amber); color: var(--ink);
+  font: 700 11px var(--mono); letter-spacing: .06em; text-transform: uppercase;
+  padding: 3px 9px; border-radius: 999px;
+}
+.release ul { margin: 14px 0 0; padding-left: 1.2em; }
+.release li { margin: 8px 0; color: #EFE2CF; }
+.release code { font: 500 .86em var(--mono); background: var(--stout-3); border: 1px solid var(--line); border-radius: 6px; padding: 1px 6px; color: var(--foam); word-break: break-word; }
+.note { margin-top: 22px; background: var(--stout-2); border-left: 4px solid var(--hop); border-radius: 0 14px 14px 0; padding: 14px 18px; font-size: 16px; }
+.more { margin-top: 26px; color: var(--muted); font-size: 15px; }
+</style>
+</head>
+<body>
+
+<nav class="site-nav" aria-label="Main">
+  <div class="wrap">
+    <div class="brand-line"><a class="brand" href="../"><img src="../assets/icon.png" alt="" width="32" height="32">Brewlight</a><span class="by-sep">—</span><a class="by" href="https://prempoddar.is-a.dev">Prem Poddar</a></div>
+    <div class="nav-links">
+      <a href="../#try">Try it</a>
+      <a href="../#features">Features</a>
+      <a href="../changelog/" aria-current="page">Release notes</a>
+      <a href="../privacy/">Privacy</a>
+      <a href="../#download" class="nav-cta">Download</a>
+    </div>
+  </div>
+</nav>
+
+<main class="wrap read">
+  <section class="hero">
+    <p class="kicker">Release notes</p>
+    <h1><span class="u">Every pour.<svg class="scribble" viewBox="0 0 400 30" preserveAspectRatio="none" aria-hidden="true"><path d="M4 16 C 90 6, 200 8, 300 12 S 380 16, 396 10"/></svg></span></h1>
+    <p class="lede">Every Brewlight release, newest first. The same notes are on the <a href="https://github.com/PremPoddar/Brewlight/releases">GitHub releases page</a>.</p>
+  </section>
+
+  <article>
+    <!-- Add each new release at the top, newest first. Keep the id and heading in sync. -->
+    <section class="release" id="v1-3-0" aria-labelledby="v1-3-0-title">
+      <div class="release-head">
+        <h2 id="v1-3-0-title">1.3.0</h2>
+        <span class="badge">Latest</span>
+        <span class="date">25 November 2026</span>
+      </div>
+      <ul>
+        <li><b>Live install status.</b> While Homebrew installs or upgrades something, Brewlight now says what it is doing and which package it is doing it to: Downloading, Installing, Upgrading or Removing.</li>
+        <li>The status shows in the Activity panel, the sidebar, the package list, the package page and the Updates list, not only in the log.</li>
+        <li>Homebrew's "Fetching downloads" and "Pouring" steps are shown as Downloading and Installing, the words people use.</li>
+        <li>Download progress is shown as an indeterminate bar when Homebrew does not report a percentage, instead of an empty bar that looks stuck.</li>
+      </ul>
+    </section>
+
+    <section class="release" id="v1-2-0" aria-labelledby="v1-2-0-title">
+      <div class="release-head">
+        <h2 id="v1-2-0-title">1.2.0</h2>
+        <span class="date">11 November 2026</span>
+      </div>
+      <ul>
+        <li>Casks that update themselves are included in the update check by default, so nothing that <code>brew upgrade --greedy</code> would upgrade is missed. The toggle still lets you hide them.</li>
+        <li>New <b>Needs attention</b> section on Updates for packages no longer in Homebrew, which make <code>brew upgrade</code> fail, and apps deleted by hand while brew still tracks them. Each has a one-click Uninstall.</li>
+        <li>Uninstall and Remove Completely now render red in menus.</li>
+        <li>About links point to this website.</li>
+      </ul>
+    </section>
+
+    <section class="release" id="v1-1-0" aria-labelledby="v1-1-0-title">
+      <div class="release-head">
+        <h2 id="v1-1-0-title">1.1.0</h2>
+        <span class="date">8 November 2026</span>
+      </div>
+      <ul>
+        <li>A failed uninstall no longer deletes the checked leftover files. They are removed only when the uninstall itself succeeded.</li>
+        <li>The background update check runs <code>brew update</code> through Brewlight's own operation queue, so it cannot race your installs or upgrades.</li>
+        <li>Clear All Caches (Settings, Privacy) clears the cache contents instead of deleting the folder out from under running features.</li>
+        <li>Package downloads cached as plain files by older Homebrew layouts now show up in the detail view, sizes and cleanup, and can be cleared.</li>
+        <li>Homebrew found at a path containing spaces (Settings, Homebrew override) is detected correctly.</li>
+        <li>Package icons cached more than a month ago are fetched again, so the icon cache stops growing forever.</li>
+        <li>Packages that leave Homebrew's catalog drop out of Brewlight's own package history.</li>
+      </ul>
+    </section>
+
+    <section class="release" id="v0-1-0" aria-labelledby="v0-1-0-title">
+      <div class="release-head">
+        <h2 id="v0-1-0-title">0.1.0</h2>
+        <span class="date">3 November 2026</span>
+      </div>
+      <ul>
+        <li>First release: Spotlight, but for brew. A fast, native Mac app for everything you do with Homebrew.</li>
+        <li>Press ⌘K to search all 16,000 formulae and apps as you type, with filters like <code>is:outdated</code>, <code>type:cask</code> and <code>cat:browsers</code>.</li>
+        <li>Discover what the community is installing, with real install counts.</li>
+        <li>Upgrade everything at once or one by one. Pinned packages and skipped versions stay put.</li>
+        <li>Remove apps completely, leftover files included, to the Trash.</li>
+        <li>Every confirmation shows the exact <code>brew</code> command that will run.</li>
+        <li>Services, taps, cleanup and disk usage, dependency trees, Brewfile import and export, and a full history.</li>
+        <li>In English, Deutsch, Español, Français, 日本語 and 简体中文.</li>
+      </ul>
+    </section>
+
+    <div class="note">Brewlight is not notarized yet. The first time you open it, macOS blocks it: go to <b>System Settings, Privacy &amp; Security</b> and click <b>Open Anyway</b>.</div>
+
+    <h2>Install or update</h2>
+    <p><code>brew install --cask prempoddar/tap/brewlight</code>, then <code>brew upgrade --cask brewlight</code> for later versions. You can also download the latest <a href="https://github.com/PremPoddar/Brewlight/releases/latest/download/Brewlight.dmg">Brewlight.dmg</a>.</p>
+    <p class="more">Older builds and their attached notes are in the <a href="https://github.com/PremPoddar/Brewlight/releases">GitHub releases</a>.</p>
+  </article>
+</main>
+
+<footer class="site-foot">
+  <div class="wrap">
+    <div class="row">
+      <a class="brand" href="../"><img src="../assets/icon.png" alt="" width="26" height="26">Brewlight</a>
+      <div class="foot-note">Spotlight, but for brew.</div>
+      <div class="links">
+        <a href="../changelog/">Release notes</a>
+        <a href="../privacy/">Privacy</a>
+        <a href="https://github.com/PremPoddar/Brewlight">Source</a>
+        <a href="https://github.com/PremPoddar/Brewlight/issues">Report a problem</a>
+        <a href="https://prempoddar.is-a.dev/apps/">More apps</a>
+        <a href="https://prempoddar.is-a.dev">Website</a>
+        <a href="mailto:prempoddar@yandex.com">Contact me</a>
+      </div>
+    </div>
+    <p class="legal">Brewlight is independent and not affiliated with the Homebrew project or Apple. Spotlight is a trademark of Apple Inc. Released under the <a href="https://github.com/PremPoddar/Brewlight/blob/main/LICENSE">Apache 2.0 license</a>.</p>
+  </div>
+</footer>
+
+</body>
+</html>

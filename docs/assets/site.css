@@ -24,7 +24,7 @@ html { scroll-padding-top: 84px; }
   box-shadow: 0 6px 20px -6px rgba(248, 172, 61, .55);
 }
 .nav-links .nav-cta:hover { background: #FFC060; color: var(--ink); }
-@media (max-width: 680px) {
+@media (max-width: 760px) {
   .nav-links a:not(.nav-cta) { display: none; }
 }
 @media (max-width: 520px) {
