@@ -281,18 +281,22 @@ struct DeprecatedRow: View {
         let p = package
         let replacement = p.replacement.flatMap { model.package(named: $0, kind: p.kind) ?? model.package(named: $0) }
         HStack(spacing: 14) {
-            PackageIcon(package: p, size: 34, appPath: model.installed[p.id]?.appPaths.first)
-            VStack(alignment: .leading, spacing: 2) {
-                HStack(spacing: 6) {
-                    Text(p.token).font(.system(size: 13, weight: .semibold))
-                    KindBadge(kind: p.kind)
-                    Text(p.isDisabled ? String(localized: "disabled") : String(localized: "deprecated"))
-                        .font(.system(size: 10, weight: .semibold)).foregroundStyle(Theme.warning)
-                        .padding(.horizontal, 6).padding(.vertical, 1)
-                        .background(Capsule().fill(Theme.warning.opacity(0.14)))
+            HStack(spacing: 14) {
+                PackageIcon(package: p, size: 34, appPath: model.installed[p.id]?.appPaths.first)
+                VStack(alignment: .leading, spacing: 2) {
+                    HStack(spacing: 6) {
+                        Text(p.token).font(.system(size: 13, weight: .semibold))
+                        KindBadge(kind: p.kind)
+                        Text(p.isDisabled ? String(localized: "disabled") : String(localized: "deprecated"))
+                            .font(.system(size: 10, weight: .semibold)).foregroundStyle(Theme.warning)
+                            .padding(.horizontal, 6).padding(.vertical, 1)
+                            .background(Capsule().fill(Theme.warning.opacity(0.14)))
+                    }
+                    Text(reasonText(p, replacement: replacement)).font(.system(size: 12)).foregroundStyle(Theme.text2).lineLimit(2)
                 }
-                Text(reasonText(p, replacement: replacement)).font(.system(size: 12)).foregroundStyle(Theme.text2).lineLimit(2)
             }
+            .contentShape(Rectangle())
+            .onTapGesture { model.reveal(p.id) }
             Spacer()
             if let r = replacement {
                 if model.isInstalled(r.id) {
@@ -325,21 +329,28 @@ struct BrokenRow: View {
 
     var body: some View {
         HStack(spacing: 14) {
-            PackageIcon(package: package, size: 34, appPath: model.installed[item.inst.id]?.appPaths.first)
-            VStack(alignment: .leading, spacing: 2) {
-                HStack(spacing: 6) {
-                    Text(item.inst.token).font(.system(size: 13, weight: .semibold))
-                    KindBadge(kind: item.inst.kind)
-                    Text(reason).font(.system(size: 10, weight: .semibold)).foregroundStyle(Theme.red)
-                        .padding(.horizontal, 6).padding(.vertical, 1)
-                        .background(Capsule().fill(Theme.red.opacity(0.14)))
+            HStack(spacing: 14) {
+                PackageIcon(package: package, size: 34, appPath: model.installed[item.inst.id]?.appPaths.first)
+                VStack(alignment: .leading, spacing: 2) {
+                    HStack(spacing: 6) {
+                        Text(item.inst.token).font(.system(size: 13, weight: .semibold))
+                        KindBadge(kind: item.inst.kind)
+                        Text(reason).font(.system(size: 10, weight: .semibold)).foregroundStyle(Theme.red)
+                            .padding(.horizontal, 6).padding(.vertical, 1)
+                            .background(Capsule().fill(Theme.red.opacity(0.14)))
+                    }
+                    Text(detail).font(.system(size: 12)).foregroundStyle(Theme.text2).lineLimit(2)
                 }
-                Text(detail).font(.system(size: 12)).foregroundStyle(Theme.text2).lineLimit(2)
             }
+            .contentShape(Rectangle())
+            .onTapGesture { model.reveal(item.inst.id) }
             Spacer()
             RowActionButton(title: String(localized: "Uninstall"), danger: true) {
                 model.pendingSheet = .uninstall(item.inst.id)
             }
+            Button { model.reveal(item.inst.id) } label: { Image(systemName: "chevron.right") }
+                .buttonStyle(.plain).foregroundStyle(Theme.text3)
+                .accessibilityLabel(String(localized: "Show \(item.inst.token)"))
         }
         .padding(.horizontal, 20)
         .frame(minHeight: 58)

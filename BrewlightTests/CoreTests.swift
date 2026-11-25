@@ -104,6 +104,48 @@ import Testing
     }
 }
 
+// MARK: Third-party taps
+
+@Suite struct TapCatalogTests {
+    @Test func scansRootLevelFormulae() throws {
+        let fm = FileManager.default
+        let root = fm.temporaryDirectory.appending(path: "brewlight-tap-\(UUID().uuidString)")
+        let tap = root.appending(path: "anomalyco/homebrew-tap")
+        try fm.createDirectory(at: tap.appending(path: "Formula"), withIntermediateDirectories: true)
+        try fm.createDirectory(at: tap.appending(path: "Casks"), withIntermediateDirectories: true)
+        defer { try? fm.removeItem(at: root) }
+
+        try """
+        class OpencodeV2 < Formula
+          desc "OpenCode V2"
+          homepage "https://opencode.ai"
+          version "2.4.1"
+        end
+        """.write(to: tap.appending(path: "opencode-v2.rb"), atomically: true, encoding: .utf8)
+        // A helper file in the tap root is not a formula.
+        try "class Helper\nend\n".write(to: tap.appending(path: "helper.rb"), atomically: true, encoding: .utf8)
+        try """
+        class Other < Formula
+          desc "Other"
+          version "1.0"
+        end
+        """.write(to: tap.appending(path: "Formula/other.rb"), atomically: true, encoding: .utf8)
+        try """
+        cask "app" do
+          version "1.0"
+        end
+        """.write(to: tap.appending(path: "Casks/app.rb"), atomically: true, encoding: .utf8)
+
+        let packages = CatalogStore.tapPackages(in: root)
+        #expect(Set(packages.map(\.token)) == ["opencode-v2", "other", "app"])
+        let opencode = try #require(packages.first { $0.token == "opencode-v2" })
+        #expect(opencode.kind == .formula)
+        #expect(opencode.tap == "anomalyco/tap")
+        #expect(opencode.version == "2.4.1")
+        #expect(opencode.desc == "OpenCode V2")
+    }
+}
+
 // MARK: Receipts
 
 @Suite struct ReceiptTests {

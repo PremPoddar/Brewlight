@@ -6,6 +6,9 @@ struct SnapshotStore: Sendable {
     let directory: URL
 
     struct Meta: Codable, Sendable {
+        /// Bump when catalog construction changes, so old snapshots are rebuilt once.
+        static let currentFormat = 2
+        var format: Int? = currentFormat
         var sourcePath: String
         var sourceModified: Date
         var savedAt: Date

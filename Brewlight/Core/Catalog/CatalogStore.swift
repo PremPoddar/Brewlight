@@ -33,19 +33,20 @@ actor CatalogStore {
         let signpost = Perf.begin("catalog.refresh")
         defer { Perf.end(signpost) }
         let existing = snapshots.loadCatalog()?.1
+        let current = existing?.format == SnapshotStore.Meta.currentFormat
         var catalog: Catalog
         var meta: SnapshotStore.Meta
         if let file = CatalogLoader.internalPackagesFile(cache: env.cache) {
             let modified = CatalogLoader.modDate(file)
-            if !force, let existing, existing.sourcePath == file.path, existing.sourceModified == modified { return nil }
+            if !force, current, let existing, existing.sourcePath == file.path, existing.sourceModified == modified { return nil }
             catalog = try CatalogLoader.loadInternal(from: file)
             meta = .init(sourcePath: file.path, sourceModified: modified, savedAt: .now)
         } else if let legacy = legacyLocal(env: env) {
-            if !force, let existing, existing.sourcePath == legacy.path, existing.sourceModified == legacy.modified { return nil }
+            if !force, current, let existing, existing.sourcePath == legacy.path, existing.sourceModified == legacy.modified { return nil }
             catalog = try CatalogLoader.parseLegacy(formulae: legacy.formulae, casks: legacy.casks, source: "api/*.jws.json")
             meta = .init(sourcePath: legacy.path, sourceModified: legacy.modified, savedAt: .now)
         } else {
-            if !force, let existing, existing.sourcePath == "remote", existing.savedAt.timeIntervalSinceNow > -3600 * 6 { return nil }
+            if !force, current, let existing, existing.sourcePath == "remote", existing.savedAt.timeIntervalSinceNow > -3600 * 6 { return nil }
             catalog = try await fetchRemote()
             meta = .init(sourcePath: "remote", sourceModified: .now, savedAt: .now)
         }
@@ -96,15 +97,33 @@ actor CatalogStore {
 
     // MARK: Third-party taps
 
-    /// Packages from installed non-core taps, by reading tap directories. The catalog has rich data
-    /// only for official taps; for others we record the name, tap and file path so they are
-    /// searchable and installable. Descriptions are scraped from the Ruby `desc "..."` line.
+    /// Packages from installed non-core taps. The catalog has rich data only for official taps;
+    /// for others we record the name, tap and file path so they are searchable and installable.
+    /// Descriptions are scraped from the Ruby `desc "..."` line.
     private func thirdPartyPackages(env: BrewEnvironment) -> [Package] {
+        Self.tapPackages(in: env.tapsDir)
+    }
+
+    /// Homebrew accepts formulae in `Formula/` and, in older or hand-made taps, at the tap root.
+    /// Scan both, plus `Casks/`, so an installed tap package is never mistaken for a removed one.
+    static func tapPackages(in tapsDir: URL) -> [Package] {
         let fm = FileManager.default
         var result: [Package] = []
-        let users = (try? fm.contentsOfDirectory(atPath: env.tapsDir.path)) ?? []
+        var seen = Set<String>()
+
+        func add(_ file: URL, kind: PackageKind, tap: String) {
+            guard file.pathExtension == "rb" else { return }
+            let token = file.deletingPathExtension().lastPathComponent
+            guard seen.insert(Package.id(kind, token)).inserted else { return }
+            let (desc, homepage, version) = scrapeRuby(file)
+            result.append(Package(
+                kind: kind, token: token, fullName: "\(tap)/\(token)", displayName: token,
+                desc: desc, homepage: homepage, version: version, tap: tap))
+        }
+
+        let users = (try? fm.contentsOfDirectory(atPath: tapsDir.path)) ?? []
         for user in users where !user.hasPrefix(".") {
-            let userDir = env.tapsDir.appending(path: user)
+            let userDir = tapsDir.appending(path: user)
             for repo in (try? fm.contentsOfDirectory(atPath: userDir.path)) ?? [] where repo.hasPrefix("homebrew-") {
                 let tap = "\(user)/\(repo.dropFirst("homebrew-".count))"
                 if tap.hasPrefix("homebrew/") { continue }
@@ -113,13 +132,15 @@ actor CatalogStore {
                     let dir = tapDir.appending(path: sub)
                     let e = fm.enumerator(at: dir, includingPropertiesForKeys: nil)
                     while let file = e?.nextObject() as? URL {
-                        guard file.pathExtension == "rb" else { continue }
-                        let token = file.deletingPathExtension().lastPathComponent
-                        let (desc, homepage, version) = Self.scrapeRuby(file)
-                        result.append(Package(
-                            kind: kind, token: token, fullName: "\(tap)/\(token)", displayName: token,
-                            desc: desc, homepage: homepage, version: version, tap: tap))
+                        add(file, kind: kind, tap: tap)
                     }
+                }
+                // Formula files at the tap root, e.g. anomalyco/tap/opencode-v2.rb.
+                for file in (try? fm.contentsOfDirectory(at: tapDir, includingPropertiesForKeys: nil)) ?? [] {
+                    guard file.pathExtension == "rb",
+                          let text = try? String(contentsOf: file, encoding: .utf8),
+                          text.contains("< Formula") else { continue }
+                    add(file, kind: .formula, tap: tap)
                 }
             }
         }
